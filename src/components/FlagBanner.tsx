@@ -9,10 +9,10 @@ export function FlagBanner() {
         style={{
           background: `linear-gradient(to right,
             white 8%,
-            rgba(0, 35, 149, 0.2) 40%,
+            rgba(0, 35, 149, 0.15) 40%,
             white 48%,
             white 52%,
-            rgba(237, 41, 57, 0.2) 60%,
+            rgba(237, 41, 57, 0.15) 60%,
             white 92%
           )`,
         }}

@@ -7,7 +7,7 @@ import { SpeakerHigh, TextAa, LinkSimple, HandWaving } from '@phosphor-icons/rea
 const sections = [
   {
     icon: <SpeakerHigh size={22} weight="duotone" />,
-    color: 'border-l-blue-600',
+    color: '',
     title: 'The French Alphabet & Pronunciation',
     content: [
       { term: 'A', detail: 'Pronounced "ah" — like in "father"' },
@@ -23,7 +23,7 @@ const sections = [
   },
   {
     icon: <TextAa size={22} weight="duotone" />,
-    color: 'border-l-red-500',
+    color: '',
     title: 'Accents & Special Characters',
     content: [
       { term: 'é', detail: 'Accent aigu — closed "ay" sound, as in été (summer)' },
@@ -37,7 +37,7 @@ const sections = [
   },
   {
     icon: <LinkSimple size={22} weight="duotone" />,
-    color: 'border-l-blue-600',
+    color: '',
     title: 'Silent Letters & Liaison',
     content: [
       { term: 'Silent consonants', detail: 'Most consonants at the end of a word are silent — e.g. petit ("puh-tee"), vous ("voo")' },
@@ -48,7 +48,7 @@ const sections = [
   },
   {
     icon: <HandWaving size={22} weight="duotone" />,
-    color: 'border-l-red-500',
+    color: '',
     title: 'Basic Greetings & Farewells',
     content: [
       { term: 'Bonjour', detail: 'Hello / Good day — used any time until evening' },
@@ -79,7 +79,7 @@ export function Unit1() {
 
       <div className="flex-1 px-4 py-4 grid gap-4 sm:grid-cols-2">
         {sections.map((section, i) => (
-          <Card key={i} className={`border-l-4 ${section.color}`}>
+          <Card key={i} className="border-l-4 border-l-secondary">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base">
                 {section.icon}

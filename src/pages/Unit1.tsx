@@ -1,8 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { SpeakerHigh, TextAa, LinkSimple, HandWaving } from '@phosphor-icons/react'
 
 const sections = [
   {
+    icon: <SpeakerHigh size={22} weight="duotone" />,
+    color: 'border-l-blue-600',
     title: 'The French Alphabet & Pronunciation',
     content: [
       { term: 'A', detail: 'Pronounced "ah" — like in "father"' },
@@ -17,27 +22,33 @@ const sections = [
     ],
   },
   {
+    icon: <TextAa size={22} weight="duotone" />,
+    color: 'border-l-red-500',
     title: 'Accents & Special Characters',
     content: [
-      { term: 'é — accent aigu', detail: 'Closed "ay" sound, as in été (summer)' },
-      { term: 'è — accent grave', detail: 'Open "eh" sound, as in mère (mother)' },
-      { term: 'ê — accent circumflex', detail: 'Like è but slightly longer, as in fête (party)' },
-      { term: 'ç — cédille', detail: 'Gives c a soft "s" sound, as in garçon (boy)' },
-      { term: 'à — accent grave', detail: 'Same sound as a — used only to distinguish words (à vs a)' },
-      { term: 'ù — accent grave', detail: 'Same sound as u — used only in où (where)' },
-      { term: 'ë / ï — tréma', detail: 'Indicates the vowel is pronounced separately, as in Noël' },
+      { term: 'é', detail: 'Accent aigu — closed "ay" sound, as in été (summer)' },
+      { term: 'è', detail: 'Accent grave — open "eh" sound, as in mère (mother)' },
+      { term: 'ê', detail: 'Accent circumflex — like è but slightly longer, as in fête (party)' },
+      { term: 'ç', detail: 'Cédille — gives c a soft "s" sound, as in garçon (boy)' },
+      { term: 'à', detail: 'Accent grave — same sound as a, used only to distinguish words' },
+      { term: 'ù', detail: 'Accent grave — same sound as u, used only in où (where)' },
+      { term: 'ë / ï', detail: 'Tréma — indicates the vowel is pronounced separately, as in Noël' },
     ],
   },
   {
+    icon: <LinkSimple size={22} weight="duotone" />,
+    color: 'border-l-blue-600',
     title: 'Silent Letters & Liaison',
     content: [
-      { term: 'Silent final consonants', detail: 'Most consonants at the end of a word are silent — e.g. petit ("puh-tee"), vous ("voo")' },
+      { term: 'Silent consonants', detail: 'Most consonants at the end of a word are silent — e.g. petit ("puh-tee"), vous ("voo")' },
       { term: 'Silent -e', detail: 'A final -e is usually silent — e.g. une ("oon"), femme ("fam")' },
-      { term: 'Liaison', detail: 'When a word ending in a silent consonant is followed by a word starting with a vowel, the consonant is pronounced — e.g. les amis ("lay-zah-mee")' },
-      { term: 'Elision', detail: 'Short words like le, la, de, que drop their vowel before another vowel — e.g. l\'ami, d\'accord' },
+      { term: 'Liaison', detail: 'A silent final consonant is pronounced when followed by a vowel — e.g. les amis ("lay-zah-mee")' },
+      { term: 'Elision', detail: 'Short words like le, la, de drop their vowel before a vowel — e.g. l\'ami, d\'accord' },
     ],
   },
   {
+    icon: <HandWaving size={22} weight="duotone" />,
+    color: 'border-l-red-500',
     title: 'Basic Greetings & Farewells',
     content: [
       { term: 'Bonjour', detail: 'Hello / Good day — used any time until evening' },
@@ -66,19 +77,28 @@ export function Unit1() {
         </Button>
       </div>
 
-      <div className="flex-1 px-4 py-3 space-y-8">
+      <div className="flex-1 px-4 py-4 grid gap-4 sm:grid-cols-2">
         {sections.map((section, i) => (
-          <div key={i}>
-            <h3 className="text-lg font-semibold mb-3 border-b pb-1">{section.title}</h3>
-            <dl className="space-y-2">
-              {section.content.map((item, j) => (
-                <div key={j} className="grid grid-cols-[200px_1fr] gap-4">
-                  <dt className="text-sm font-medium">{item.term}</dt>
-                  <dd className="text-sm text-muted-foreground">{item.detail}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <Card key={i} className={`border-l-4 ${section.color}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-base">
+                {section.icon}
+                {section.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-2 items-center">
+                {section.content.map((item, j) => (
+                  <>
+                    <Badge key={`t-${j}`} variant="secondary" className="text-sm font-mono rounded-sm">
+                      {item.term}
+                    </Badge>
+                    <dd key={`d-${j}`} className="text-sm text-muted-foreground">{item.detail}</dd>
+                  </>
+                ))}
+              </dl>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

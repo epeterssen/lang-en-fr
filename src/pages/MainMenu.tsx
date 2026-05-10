@@ -82,7 +82,7 @@ export function MainMenu() {
   const navigate = useNavigate()
   const allValues = units.map((_, i) => `unit-${i}`)
   const [openItems, setOpenItems] = useState<string[]>([])
-  const allExpanded = openItems.length === units.length
+  const allExpanded = openItems.length === allValues.length
 
   return (
     <div className="flex flex-col h-full min-h-[calc(100vh-120px)]">
@@ -101,7 +101,14 @@ export function MainMenu() {
           {units.map((unit, i) => (
             <AccordionItem key={i} value={`unit-${i}`}>
               <AccordionTrigger className="text-base font-medium">
-                {unit.title}
+                {i === 0 ? (
+                  <span
+                    className="underline"
+                    onClick={(e) => { e.stopPropagation(); navigate('/unit/1') }}
+                  >
+                    {unit.title}
+                  </span>
+                ) : unit.title}
               </AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-1 pl-2">

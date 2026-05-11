@@ -4,10 +4,10 @@ import { FlagBanner } from '@/components/FlagBanner'
 
 export function Layout() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col text-foreground">
       <header className="sticky top-0 z-20 relative bg-background">
         <FlagBanner />
-        <h1 className="absolute inset-0 flex items-center justify-center text-4xl font-bold">lang-en-fr</h1>
+        <h1 className="absolute inset-0 flex items-center justify-center text-4xl font-bold">Understanding French</h1>
         <div className="absolute top-1/2 right-4 -translate-y-1/2">
           <HamburgerMenu />
         </div>

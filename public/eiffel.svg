@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 420">
+  <defs>
+    <filter id="blur"><feGaussianBlur stdDeviation="1.5"/></filter>
+  </defs>
+  <g fill="none" stroke="black" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.02" filter="url(#blur)">
+    <!-- Outer legs -->
+    <path d="M 8 415 C 25 385 45 345 62 302"/>
+    <path d="M 192 415 C 175 385 155 345 138 302"/>
+    <!-- Inner legs -->
+    <path d="M 65 415 C 72 380 76 345 80 302"/>
+    <path d="M 135 415 C 128 380 124 345 120 302"/>
+    <!-- Base arches -->
+    <path d="M 65 415 Q 100 372 135 415"/>
+    <path d="M 8 415 Q 37 397 65 415"/>
+    <path d="M 135 415 Q 163 397 192 415"/>
+    <!-- Base cross brace -->
+    <line x1="28" y1="368" x2="172" y2="368"/>
+    <!-- First platform -->
+    <rect x="54" y="296" width="92" height="9" rx="1"/>
+    <!-- Middle section -->
+    <path d="M 62 296 C 68 272 74 248 80 215"/>
+    <path d="M 138 296 C 132 272 126 248 120 215"/>
+    <!-- Mid brace -->
+    <line x1="70" y1="262" x2="130" y2="262"/>
+    <!-- Second platform -->
+    <rect x="73" y="208" width="54" height="8" rx="1"/>
+    <!-- Upper section -->
+    <path d="M 80 208 L 89 130"/>
+    <path d="M 120 208 L 111 130"/>
+    <!-- Upper brace -->
+    <line x1="83" y1="170" x2="117" y2="170"/>
+    <!-- Top platform -->
+    <rect x="84" y="123" width="32" height="8" rx="1"/>
+    <!-- Spire -->
+    <path d="M 87 123 L 100 48 L 113 123"/>
+    <!-- Antenna -->
+    <line x1="100" y1="48" x2="100" y2="14"/>
+    <line x1="96" y1="22" x2="104" y2="22"/>
+  </g>
+</svg>

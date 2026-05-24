@@ -27,7 +27,7 @@ export function Layout() {
         <Outlet />
       </main>
 
-      <footer className="sticky bottom-0 bg-background border-t px-4 py-2 text-sm text-muted-foreground text-right">
+      <footer className="sticky bottom-0 bg-background border-t border-border/50 px-4 py-2 text-sm text-muted-foreground text-right">
         lang-en-fr<sup>&copy;</sup> {new Date().getFullYear()}
       </footer>
     </div>

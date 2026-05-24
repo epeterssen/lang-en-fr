@@ -99,7 +99,7 @@ export function MainMenu() {
       <div className="flex-1 px-4 py-3">
         <Accordion type="multiple" value={openItems} onValueChange={setOpenItems} className="w-full">
           {units.map((unit, i) => (
-            <AccordionItem key={i} value={`unit-${i}`}>
+            <AccordionItem key={i} value={`unit-${i}`} className="border-border/50">
               <AccordionTrigger className="text-base font-medium">
                 {i === 0 ? (
                   <span

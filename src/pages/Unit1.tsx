@@ -104,7 +104,7 @@ export function Unit1() {
         <div className="flex items-center gap-2">
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="ghost" size="sm">Questions</Button>
+              <Button variant="ghost" size="sm">AI Agent</Button>
             </DrawerTrigger>
             <DrawerContent className="h-[50vh] bg-background/80 backdrop-blur-[2px]">
             <DrawerHeader className="pb-2">

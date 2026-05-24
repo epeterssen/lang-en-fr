@@ -38,6 +38,7 @@ export function AIAgentDrawer() {
     setIsLoading(true)
 
     try {
+      if (!API_URL) throw new Error('VITE_CHAT_API_URL is not set')
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,10 +52,11 @@ export function AIAgentDrawer() {
         updated[updated.length - 1] = { role: 'assistant', content: data.content }
         return updated
       })
-    } catch {
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong. Please try again.'
       setMessages(prev => {
         const updated = [...prev]
-        updated[updated.length - 1] = { role: 'assistant', content: 'Something went wrong. Please try again.' }
+        updated[updated.length - 1] = { role: 'assistant', content: msg }
         return updated
       })
     } finally {

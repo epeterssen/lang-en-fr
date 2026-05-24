@@ -69,9 +69,9 @@ export function Unit2() {
         </Button>
       </div>
 
-      <div className="flex-1 px-4 py-4 grid gap-4 sm:grid-cols-2">
+      <div className="flex-1 px-4 py-4 grid gap-4">
         {sections.map((section, i) => (
-          <Card key={i} className="border-l-4 border-l-secondary backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.10)_0%,rgba(140,155,180,0.04)_100%)]">
+          <Card key={i} className="border-l-4 border-l-secondary backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base">
                 {section.icon}

@@ -87,7 +87,7 @@ export function AIAgentDrawer() {
       <DrawerTrigger asChild>
         <Button variant="ghost" size="sm">AI Agent</Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[50vh] bg-background/80 backdrop-blur-[2px]">
+      <DrawerContent className="h-[50vh] backdrop-blur-2xl border-t border-grey/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] [background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
         <DrawerHeader className="pb-2">
           <DrawerTitle>French Language Tutor</DrawerTitle>
         </DrawerHeader>
@@ -97,8 +97,8 @@ export function AIAgentDrawer() {
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${allowCopyPaste ? 'select-text' : 'select-none'} ${
                   msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-foreground'
+                    ? 'text-foreground [background-color:rgba(237,41,57,0.06)]'
+                    : 'text-foreground [background-color:rgba(0,35,149,0.06)]'
                 }`}>
                   {msg.content || (isLoading && i === messages.length - 1 ? <TypingDots /> : '')}
                 </div>
@@ -111,7 +111,7 @@ export function AIAgentDrawer() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
-              placeholder="Ask a question..."
+              placeholder="Ask a French question..."
               className="resize-none min-h-[40px] max-h-[120px]"
               rows={1}
               disabled={isLoading}

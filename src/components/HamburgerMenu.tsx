@@ -16,7 +16,7 @@ function initials(name: string) {
 
 export function HamburgerMenu() {
   const { user, login, logout } = useAuthStore()
-  const { showBackground, toggleBackground } = useSettingsStore()
+  const { showBackground, toggleBackground, allowCopyPaste, toggleCopyPaste } = useSettingsStore()
 
   return (
     <Sheet>
@@ -54,6 +54,16 @@ export function HamburgerMenu() {
               className={`relative w-10 h-6 rounded-full transition-colors ${showBackground ? 'bg-primary' : 'bg-muted'}`}
             >
               <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${showBackground ? 'left-5' : 'left-1'}`} />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between px-1">
+            <span className="text-sm">Allow copy/paste</span>
+            <button
+              onClick={toggleCopyPaste}
+              className={`relative w-10 h-6 rounded-full transition-colors ${allowCopyPaste ? 'bg-primary' : 'bg-muted'}`}
+            >
+              <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${allowCopyPaste ? 'left-5' : 'left-1'}`} />
             </button>
           </div>
 

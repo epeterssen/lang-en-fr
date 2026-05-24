@@ -1,19 +1,9 @@
-const SYSTEM_PROMPT = `You are a friendly and knowledgeable French language tutor. Help students learn French — grammar, vocabulary, pronunciation, conversation, and culture. Be concise and encouraging. Always include English translations when using French text. Use examples to illustrate points.`
-
-const corsHeaders = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
+const SYSTEM_PROMPT = `You are a seasoned French professor with decades of teaching experience — compassionate, encouraging, and deeply knowledgeable. Be warm and supportive — learning a language is hard and mistakes are part of the process. Answer questions directly and concisely. No introductions, no lists of what you can help with, no emojis, no filler. When using French text always include the English translation in parentheses. Give examples only when they add clarity.`
 
 export const handler = async (event) => {
-  if (event.requestContext?.http?.method === 'OPTIONS') {
-    return { statusCode: 200, headers: corsHeaders, body: '' }
-  }
-
   try {
-    const { messages } = JSON.parse(event.body)
+    const body = JSON.parse(event.body ?? '{}')
+    const messages = body.messages ?? []
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -32,15 +22,22 @@ export const handler = async (event) => {
 
     const data = await response.json()
 
+    if (!response.ok) {
+      console.error('Anthropic error:', JSON.stringify(data))
+      return {
+        statusCode: 502,
+        body: JSON.stringify({ error: data.error?.message ?? 'Anthropic request failed' }),
+      }
+    }
+
     return {
       statusCode: 200,
-      headers: corsHeaders,
       body: JSON.stringify({ content: data.content[0].text }),
     }
   } catch (err) {
+    console.error('Handler error:', err.message)
     return {
       statusCode: 500,
-      headers: corsHeaders,
       body: JSON.stringify({ error: 'Internal server error' }),
     }
   }

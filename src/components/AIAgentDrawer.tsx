@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import { useSettingsStore } from '@/store/settings'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { PaperPlaneTilt } from '@phosphor-icons/react'
@@ -12,12 +13,27 @@ import {
 
 const API_URL = import.meta.env.VITE_CHAT_API_URL
 
+function TypingDots() {
+  return (
+    <span className="inline-flex gap-1 items-center h-4">
+      {[0, 1, 2].map(i => (
+        <span
+          key={i}
+          className="w-1 h-1 rounded-full bg-current opacity-50 animate-bounce"
+          style={{ animationDelay: `${i * 0.15}s` }}
+        />
+      ))}
+    </span>
+  )
+}
+
 interface Message {
   role: 'user' | 'assistant'
   content: string
 }
 
 export function AIAgentDrawer() {
+  const allowCopyPaste = useSettingsStore((s) => s.allowCopyPaste)
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Ask me anything about the French language.' },
   ])
@@ -46,17 +62,19 @@ export function AIAgentDrawer() {
           messages: history.map(m => ({ role: m.role, content: m.content })),
         }),
       })
+      if (!res.ok) throw new Error(`Lambda error: ${res.status}`)
       const data = await res.json()
+      const content = typeof data === 'string' ? data : (data.content ?? 'French AI Agent is temporarily unavailable.')
       setMessages(prev => {
         const updated = [...prev]
-        updated[updated.length - 1] = { role: 'assistant', content: data.content }
+        updated[updated.length - 1] = { role: 'assistant', content }
         return updated
       })
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Something went wrong. Please try again.'
+      console.error(err instanceof Error ? err.message : err)
       setMessages(prev => {
         const updated = [...prev]
-        updated[updated.length - 1] = { role: 'assistant', content: msg }
+        updated[updated.length - 1] = { role: 'assistant', content: 'French AI Agent is temporarily unavailable.' }
         return updated
       })
     } finally {
@@ -77,12 +95,12 @@ export function AIAgentDrawer() {
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${allowCopyPaste ? 'select-text' : 'select-none'} ${
                   msg.role === 'user'
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-foreground'
                 }`}>
-                  {msg.content || (isLoading ? '…' : '')}
+                  {msg.content || (isLoading && i === messages.length - 1 ? <TypingDots /> : '')}
                 </div>
               </div>
             ))}

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { HamburgerMenu } from '@/components/HamburgerMenu'
 import { FlagBanner } from '@/components/FlagBanner'
+import { AIAgentDrawer } from '@/components/AIAgentDrawer'
 import { useSettingsStore } from '@/store/settings'
 
 export function Layout() {
@@ -16,7 +17,8 @@ export function Layout() {
       <header className="sticky top-0 z-20 relative bg-background">
         <FlagBanner />
         <h1 className="absolute inset-0 flex items-center justify-center text-4xl font-bold">Understanding French</h1>
-        <div className="absolute top-1/2 right-4 -translate-y-1/2">
+        <div className="absolute top-1/2 right-4 -translate-y-1/2 flex items-center gap-1">
+          <AIAgentDrawer />
           <HamburgerMenu />
         </div>
       </header>

@@ -1,27 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { useRef, useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Textarea } from '@/components/ui/textarea'
-import { SpeakerHigh, TextAa, LinkSimple, HandWaving, PaperPlaneTilt } from '@phosphor-icons/react'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-}
+import { SpeakerHigh, TextAa, LinkSimple, HandWaving } from '@phosphor-icons/react'
 
 const sections = [
   {
     icon: <SpeakerHigh size={22} weight="duotone" />,
-    color: '',
     title: 'The French Alphabet & Pronunciation',
     content: [
       { term: 'A', detail: 'Pronounced "ah" — like in "father"' },
@@ -37,7 +22,6 @@ const sections = [
   },
   {
     icon: <TextAa size={22} weight="duotone" />,
-    color: '',
     title: 'Accents & Special Characters',
     content: [
       { term: 'é', detail: 'Accent aigu — closed "ay" sound, as in été (summer)' },
@@ -51,7 +35,6 @@ const sections = [
   },
   {
     icon: <LinkSimple size={22} weight="duotone" />,
-    color: '',
     title: 'Silent Letters & Liaison',
     content: [
       { term: 'Silent consonants', detail: 'Most consonants at the end of a word are silent — e.g. petit ("puh-tee"), vous ("voo")' },
@@ -62,7 +45,6 @@ const sections = [
   },
   {
     icon: <HandWaving size={22} weight="duotone" />,
-    color: '',
     title: 'Basic Greetings & Farewells',
     content: [
       { term: 'Bonjour', detail: 'Hello / Good day — used any time until evening' },
@@ -81,72 +63,14 @@ const sections = [
 
 export function Unit1() {
   const navigate = useNavigate()
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Ask me anything about Unit 1 or the French language.' },
-  ])
-  const [input, setInput] = useState('')
-  const bottomRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  function handleSend() {
-    if (!input.trim()) return
-    setMessages(prev => [...prev, { role: 'user', content: input.trim() }])
-    setInput('')
-  }
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-120px)]">
+    <div className="flex flex-col">
       <div className="sticky top-24 bg-background z-10 flex items-center justify-between px-4 pt-4 pb-2">
         <h2 className="text-2xl font-semibold">Unit 1: Foundations</h2>
-        <div className="flex items-center gap-2">
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button variant="ghost" size="sm">AI Agent</Button>
-            </DrawerTrigger>
-            <DrawerContent className="h-[50vh] bg-background/80 backdrop-blur-[2px]">
-            <DrawerHeader className="pb-2">
-              <DrawerTitle>Unit 1 Questions</DrawerTitle>
-            </DrawerHeader>
-
-            <div className="flex flex-col flex-1 overflow-hidden px-4 pb-4 gap-3">
-              <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-                {messages.map((msg, i) => (
-                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
-                      msg.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-foreground'
-                    }`}>
-                      {msg.content}
-                    </div>
-                  </div>
-                ))}
-                <div ref={bottomRef} />
-              </div>
-
-              <div className="flex gap-2 items-end">
-                <Textarea
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
-                  placeholder="Ask a question..."
-                  className="resize-none min-h-[40px] max-h-[120px]"
-                  rows={1}
-                />
-                <Button size="icon" onClick={handleSend}>
-                  <PaperPlaneTilt size={16} />
-                </Button>
-              </div>
-            </div>
-            </DrawerContent>
-          </Drawer>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/main-menu')}>
-            Main Menu
-          </Button>
-        </div>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/main-menu')}>
+          Main Menu
+        </Button>
       </div>
 
       <div className="flex-1 px-4 py-4 grid gap-4 sm:grid-cols-2">

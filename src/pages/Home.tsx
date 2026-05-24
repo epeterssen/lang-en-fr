@@ -5,7 +5,7 @@ export function Home() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col h-full min-h-[calc(100vh-120px)]">
+    <div className="flex flex-col">
       <h2 className="text-2xl font-semibold px-4 pt-4">Home</h2>
       <div className="flex-1 px-8 py-6 space-y-6">
         <p className="text-lg leading-relaxed">

@@ -85,7 +85,7 @@ export function MainMenu() {
   const allExpanded = openItems.length === allValues.length
 
   return (
-    <div className="flex flex-col h-full min-h-[calc(100vh-120px)]">
+    <div className="flex flex-col">
       <div className="sticky top-24 bg-background z-10 flex items-center justify-between px-4 pt-4 pb-2">
         <h2 className="text-2xl font-semibold">Main Menu</h2>
           <Button

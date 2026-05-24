@@ -1,8 +1,16 @@
+import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { HamburgerMenu } from '@/components/HamburgerMenu'
 import { FlagBanner } from '@/components/FlagBanner'
+import { useSettingsStore } from '@/store/settings'
 
 export function Layout() {
+  const showBackground = useSettingsStore((s) => s.showBackground)
+
+  useEffect(() => {
+    document.body.classList.toggle('bg-on', showBackground)
+  }, [showBackground])
+
   return (
     <div className="min-h-screen flex flex-col text-foreground">
       <header className="sticky top-0 z-20 relative bg-background">

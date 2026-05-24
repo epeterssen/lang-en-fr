@@ -79,11 +79,18 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: url('/eiffel.svg');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 30% auto;
-    background-attachment: fixed;
+  }
+  body.bg-on::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url('/EiffelTower.jpg') center calc(100% + 150px) / auto 88vh no-repeat;
+    opacity: 0.05;
+    filter: saturate(0.05) hue-rotate(200deg) brightness(2.5);
+    mask-image: radial-gradient(ellipse 50% 55% at center, black 10%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 55% at center, black 10%, transparent 100%);
+    z-index: -1;
+    pointer-events: none;
   }
   html {
     @apply font-sans;

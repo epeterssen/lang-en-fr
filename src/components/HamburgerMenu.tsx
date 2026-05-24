@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/store/auth'
+import { useSettingsStore } from '@/store/settings'
 
 function initials(name: string) {
   return name
@@ -15,6 +16,7 @@ function initials(name: string) {
 
 export function HamburgerMenu() {
   const { user, login, logout } = useAuthStore()
+  const { showBackground, toggleBackground } = useSettingsStore()
 
   return (
     <Sheet>
@@ -44,6 +46,16 @@ export function HamburgerMenu() {
               Login
             </Button>
           )}
+
+          <div className="flex items-center justify-between px-1">
+            <span className="text-sm">Background image</span>
+            <button
+              onClick={toggleBackground}
+              className={`relative w-10 h-6 rounded-full transition-colors ${showBackground ? 'bg-primary' : 'bg-muted'}`}
+            >
+              <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${showBackground ? 'left-5' : 'left-1'}`} />
+            </button>
+          </div>
 
           {user && (
             <Button variant="ghost" className="w-full justify-start" onClick={logout}>

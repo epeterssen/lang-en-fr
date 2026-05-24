@@ -108,6 +108,13 @@ export function MainMenu() {
                   >
                     {unit.title}
                   </span>
+                ) : i === 1 ? (
+                  <span
+                    className="underline"
+                    onClick={(e) => { e.stopPropagation(); navigate('/unit/2') }}
+                  >
+                    {unit.title}
+                  </span>
                 ) : unit.title}
               </AccordionTrigger>
               <AccordionContent>

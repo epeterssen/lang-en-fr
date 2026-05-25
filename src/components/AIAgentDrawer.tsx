@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { useSettingsStore } from '@/store/settings'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { PaperPlaneTilt } from '@phosphor-icons/react'
+import { PaperPlaneTiltIcon } from '@phosphor-icons/react'
 import {
   Drawer,
   DrawerContent,
@@ -117,7 +117,7 @@ export function AIAgentDrawer() {
               disabled={isLoading}
             />
             <Button size="icon" onClick={handleSend} disabled={isLoading}>
-              <PaperPlaneTilt size={16} />
+              <PaperPlaneTiltIcon size={16} />
             </Button>
           </div>
         </div>

@@ -1,12 +1,13 @@
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { SpeakerHigh, TextAa, LinkSimple, HandWaving } from '@phosphor-icons/react'
+import { SpeakerHighIcon, TextAaIcon, LinkSimpleIcon, HandWavingIcon } from '@phosphor-icons/react'
+import { RolodexView } from '@/components/RolodexView'
+import { UnitHeader } from '@/components/UnitHeader'
+import { useSettingsStore } from '@/store/settings'
 
 const sections = [
   {
-    icon: <SpeakerHigh size={22} weight="duotone" />,
+    icon: <SpeakerHighIcon size={22} weight="duotone" />,
     title: 'The French Alphabet & Pronunciation',
     content: [
       { term: 'A', detail: 'Pronounced "ah": like in "father"' },
@@ -21,7 +22,7 @@ const sections = [
     ],
   },
   {
-    icon: <TextAa size={22} weight="duotone" />,
+    icon: <TextAaIcon size={22} weight="duotone" />,
     title: 'Accents & Special Characters',
     content: [
       { term: 'é', detail: 'Accent aigu: closed "ay" sound, as in été (summer)' },
@@ -34,7 +35,7 @@ const sections = [
     ],
   },
   {
-    icon: <LinkSimple size={22} weight="duotone" />,
+    icon: <LinkSimpleIcon size={22} weight="duotone" />,
     title: 'Silent Letters & Liaison',
     content: [
       { term: 'Silent consonants', detail: 'Most consonants at the end of a word are silent: e.g. petit ("puh-tee"), vous ("voo")' },
@@ -44,7 +45,7 @@ const sections = [
     ],
   },
   {
-    icon: <HandWaving size={22} weight="duotone" />,
+    icon: <HandWavingIcon size={22} weight="duotone" />,
     title: 'Basic Greetings & Farewells',
     content: [
       { term: 'Bonjour', detail: 'Hello / Good day: used any time until evening' },
@@ -62,41 +63,40 @@ const sections = [
 ]
 
 export function Unit1() {
-  const navigate = useNavigate()
+  const rolodex = useSettingsStore((s) => s.rolodex)
 
   return (
     <div className="flex flex-col">
-      <div className="sticky top-24 bg-background z-10 flex items-center justify-between px-4 pt-4 pb-2">
-        <h2 className="text-2xl font-semibold">Unit 1: Foundations</h2>
-        <Button variant="ghost" size="sm" onClick={() => navigate('/main-menu')}>
-          Main Menu
-        </Button>
-      </div>
+      <UnitHeader title="Unit 1: Foundations" />
 
-      <div className="flex-1 px-4 py-4 grid gap-4">
-        {sections.map((section, i) => (
-          <Card key={i} className="border-l-4 border-l-secondary backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-base">
-                {section.icon}
-                {section.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-2 items-center">
-                {section.content.map((item, j) => (
-                  <>
-                    <Badge key={`t-${j}`} variant="secondary" className="text-sm font-mono rounded-sm ![background-color:rgba(0,35,149,0.12)]">
-                      {item.term}
-                    </Badge>
-                    <dd key={`d-${j}`} className="text-sm text-muted-foreground">{item.detail}</dd>
-                  </>
-                ))}
-              </dl>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {rolodex ? (
+        <RolodexView sections={sections} />
+      ) : (
+        <div className="flex-1 px-4 py-4 grid gap-4">
+          {sections.map((section, i) => (
+            <Card key={i} className="border-l-4 border-l-secondary backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  {section.icon}
+                  {section.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-2 items-center">
+                  {section.content.map((item, j) => (
+                    <>
+                      <Badge key={`t-${j}`} variant="secondary" className="text-sm font-mono rounded-sm ![background-color:rgba(0,35,149,0.12)]">
+                        {item.term}
+                      </Badge>
+                      <dd key={`d-${j}`} className="text-sm text-muted-foreground">{item.detail}</dd>
+                    </>
+                  ))}
+                </dl>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

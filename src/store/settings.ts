@@ -5,6 +5,8 @@ interface SettingsState {
   toggleBackground: () => void
   allowCopyPaste: boolean
   toggleCopyPaste: () => void
+  rolodex: boolean
+  toggleRolodex: () => void
 }
 
 export const useSettingsStore = create<SettingsState>((set) => ({
@@ -12,4 +14,6 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   toggleBackground: () => set((s) => ({ showBackground: !s.showBackground })),
   allowCopyPaste: false,
   toggleCopyPaste: () => set((s) => ({ allowCopyPaste: !s.allowCopyPaste })),
+  rolodex: true,
+  toggleRolodex: () => set((s) => ({ rolodex: !s.rolodex })),
 }))

@@ -5,8 +5,9 @@ import { RolodexView } from '@/components/RolodexView'
 import { UnitHeader, KeyE } from '@/components/UnitHeader'
 import { useSettingsStore } from '@/store/settings'
 import { TXT } from '@/utils/txt'
+import type { Section } from '@/types'
 
-const sections: { icon: React.ReactNode; title: string; content: { term?: string; detail: React.ReactNode }[] }[] = [
+const sections: Section[] = [
   {
     icon: <UsersIcon size={22} weight="duotone" />,
     title: 'Subject Pronouns',
@@ -27,14 +28,14 @@ const sections: { icon: React.ReactNode; title: string; content: { term?: string
       { term: 'ils', detail: <>They {KeyE.Masc}: {TXT.ttip('ils arrivent', 'they arrive')} (used even if only one male is in the group)</> },
       { term: 'elles', detail: <>They {KeyE.Fem}: {TXT.ttip('elles chantent', 'they sing')} (only when every member of the group is feminine)</> },
       { detail: '' },
-      { detail: <strong>Note the two uses of <em>vous</em>. It can be singular, formal (to show respect) or plural (to imply "you all").</strong> },
+      { detail: <strong>Note the two uses of <em>vous</em>. It can be singular, formal (to show respect) or plural (to imply "you all"). This is explained more in the next section.</strong> },
     ],
   },
   {
     icon: <UserSwitchIcon size={22} weight="duotone" />,
     title: 'Tu vs. Vous (Formal vs. Informal)',
     content: [
-      { detail: <strong>French has two words for "you." Choosing the wrong one can come across as rude or cold. When in doubt, use vous.</strong> },
+      { detail: <strong>French has two words for "you." Choosing the wrong one can come across as rude or cold. When in doubt, use <em>vous</em>.</strong> },
       { detail: '' },
       { detail: 'Use tu for:' },
       { term: 'Friends & family', detail: <>Close friends, relatives, romantic partners: {TXT.ttip('Tu viens ce soir?', 'Are you coming tonight?')}</> },
@@ -48,10 +49,6 @@ const sections: { icon: React.ReactNode; title: string; content: { term?: string
       { term: 'Authority', detail: <>Teachers, doctors, employers, officials: {TXT.ttip('Vous pouvez m\'aider?', 'Can you help me?')}</> },
       { term: 'Service', detail: <>Waiters, shopkeepers, receptionists: {TXT.ttip('Vous avez une table?', 'Do you have a table?')}</> },
       { term: 'Plural', detail: <>Always use vous when speaking to two or more people, regardless of formality</> },
-      { detail: '' },
-      { detail: 'Tutoyer and vouvoyer:' },
-      { term: 'Tutoyer', detail: <>The act of using tu with someone: {TXT.ttip('On peut se tutoyer?', 'Can we use tu with each other?')} A small but meaningful social step</> },
-      { term: 'Vouvoyer', detail: <>The act of using vous: Using vous with a close colleague signals deliberate distance</> },
     ],
   },
   {
@@ -66,8 +63,8 @@ const sections: { icon: React.ReactNode; title: string; content: { term?: string
       { term: 'lui', detail: <>Him: {TXT.ttip('sans lui', 'without him')}, {TXT.ttip('c\'est lui', 'it\'s him')}</> },
       { term: 'elle', detail: <>Her: {TXT.ttip('avant elle', 'before her')}, {TXT.ttip('c\'est elle', 'it\'s her')}</> },
       { term: 'nous', detail: <>Us: {TXT.ttip('avec nous', 'with us')}, {TXT.ttip('c\'est nous', 'it\'s us')}</> },
-      { term: 'vous', detail: <>You {KeyE.Form}/plural: {TXT.ttip('pour vous', 'for you')}, {TXT.ttip('c\'est vous', 'it\'s you')}</> },
-      { term: 'eux', detail: <>Them {KeyE.Masc}/mixed: {TXT.ttip('sans eux', 'without them')}, {TXT.ttip('c\'est eux', 'it\'s them')}</> },
+      { term: 'vous', detail: <>You {KeyE.FormOrPlur}: {TXT.ttip('pour vous', 'for you')}, {TXT.ttip('c\'est vous', 'it\'s you')}</> },
+      { term: 'eux', detail: <>Them {KeyE.MascOrMix}: {TXT.ttip('sans eux', 'without them')}, {TXT.ttip('c\'est eux', 'it\'s them')}</> },
       { term: 'elles', detail: <>Them {KeyE.Fem}: {TXT.ttip('pour elles', 'for them')}, {TXT.ttip('c\'est elles', 'it\'s them')}</> },
       { detail: '' },
       { detail: 'When to use them:' },

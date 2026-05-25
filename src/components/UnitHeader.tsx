@@ -3,19 +3,30 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import type { ContentItem } from '@/types'
 
 export const KeyE: Record<string, React.ReactNode> = {
   Masc: <>(<em>m.</em>)</>,
   Fem: <>(<em>f.</em>)</>,
   Inf: <>(<em>inf.</em>)</>,
   Form: <>(<em>form.</em>)</>,
+  Sing: <>(<em>s.</em>)</>,
+  Plur: <>(<em>pl.</em>)</>,
+  Mix: <>(<em>mx.</em>)</>,
+  MascOrMix: <>(<em>m.</em> or <em>mx.</em>)</>,
+  FormOrPlur: <>(<em>f.</em> or <em>pl.</em>)</>,
 }
 
-const keyEntries: { term: React.ReactNode; detail: React.ReactNode }[] = [
+const keyEntries: ContentItem[] = [
   { term: KeyE.Masc, detail: 'Masculine' },
   { term: KeyE.Fem, detail: 'Feminine' },
+  { detail: '' },
   { term: KeyE.Inf, detail: 'Informal' },
   { term: KeyE.Form, detail: 'Formal' },
+  { detail: '' },
+  { term: KeyE.Sing, detail: 'Singular' },
+  { term: KeyE.Plur, detail: 'Plural' },
+  { term: KeyE.Mix, detail: 'Mixed' },
 ]
 
 export function UnitHeader({ title }: { title: string }) {
@@ -36,10 +47,14 @@ export function UnitHeader({ title }: { title: string }) {
             <CardContent>
               <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-2 items-center">
                 {keyEntries.map((entry, i) => (
-                  <>
-                    <Badge key={`t-${i}`} variant="secondary" className="text-sm font-mono rounded-sm ![background-color:rgba(0,35,149,0.12)]">{entry.term}</Badge>
-                    <dd key={`d-${i}`} className="text-sm text-muted-foreground">{entry.detail}</dd>
-                  </>
+                  entry.term ? (
+                    <>
+                      <Badge key={`t-${i}`} variant="secondary" className="text-sm font-mono rounded-sm ![background-color:rgba(0,35,149,0.12)]">{entry.term}</Badge>
+                      <dd key={`d-${i}`} className="text-sm text-muted-foreground">{entry.detail}</dd>
+                    </>
+                  ) : (
+                    <dd key={`d-${i}`} className="col-span-2 text-sm text-muted-foreground">{entry.detail}</dd>
+                  )
                 ))}
               </dl>
             </CardContent>

@@ -5,8 +5,9 @@ import { RolodexView } from '@/components/RolodexView'
 import { UnitHeader } from '@/components/UnitHeader'
 import { useSettingsStore } from '@/store/settings'
 import { TXT } from '@/utils/txt'
+import type { Section } from '@/types'
 
-const sections: { icon: React.ReactNode; title: string; content: { term?: string; detail: React.ReactNode }[] }[] = [
+const sections: Section[] = [
   {
     icon: <ScalesIcon size={22} weight="duotone" />,
     title: 'Grammatical Gender (Masculine / Feminine)',

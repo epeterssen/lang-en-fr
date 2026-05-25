@@ -1,12 +1,7 @@
 import { useState, useRef, useLayoutEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-
-interface Section {
-  icon: React.ReactNode
-  title: string
-  content: { term?: string; detail: React.ReactNode }[]
-}
+import type { Section } from '@/types'
 
 const PEEK = 80
 

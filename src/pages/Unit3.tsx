@@ -10,7 +10,7 @@ import type { Section } from '@/types'
 const sections: Section[] = [
   {
     icon: <UsersIcon size={22} weight="duotone" />,
-    title: 'Subject Pronouns',
+    title: 'Subject Pronouns (Pronoms sujets)',
     content: [
       { detail: <><strong>Every French verb must have an explicit subject pronoun. Unlike English, you cannot drop it. The subject pronoun tells you who is doing the action.</strong></> },
       { detail: '' },

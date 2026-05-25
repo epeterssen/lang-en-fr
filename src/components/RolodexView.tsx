@@ -106,7 +106,7 @@ export function RolodexView({ sections }: { sections: Section[] }) {
                   pointerEvents: i === index ? 'auto' : 'none',
                 }}
               >
-                <Card className="border-l-4 border-l-secondary backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
+                <Card className={section.cardClass ?? "border-l-4 border-l-[rgba(0,35,149,0.75)] backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]"}>
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center gap-2 text-base">
                       {section.icon}

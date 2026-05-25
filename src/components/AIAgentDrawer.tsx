@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { useSettingsStore } from '@/store/settings'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { PaperPlaneTilt } from '@phosphor-icons/react'
+import { PaperPlaneTiltIcon } from '@phosphor-icons/react'
 import {
   Drawer,
   DrawerContent,
@@ -40,14 +40,37 @@ export function AIAgentDrawer() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const questionHistory = useRef<string[]>([])
+  const historyIndex = useRef(-1)
+  const inputDraft = useRef('')
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  function handleHistoryKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'ArrowUp') {
+      if (questionHistory.current.length === 0) return
+      e.preventDefault()
+      if (historyIndex.current === -1) inputDraft.current = input
+      const next = Math.min(historyIndex.current + 1, questionHistory.current.length - 1)
+      historyIndex.current = next
+      setInput(questionHistory.current[next])
+    } else if (e.key === 'ArrowDown') {
+      if (historyIndex.current === -1) return
+      e.preventDefault()
+      const next = historyIndex.current - 1
+      historyIndex.current = next
+      setInput(next < 0 ? inputDraft.current : questionHistory.current[next])
+    }
+  }
+
   async function handleSend() {
     if (!input.trim() || isLoading) return
     const userMessage = input.trim()
+    questionHistory.current = [userMessage, ...questionHistory.current]
+    historyIndex.current = -1
+    inputDraft.current = ''
     const history: Message[] = [...messages, { role: 'user', content: userMessage }]
     setMessages([...history, { role: 'assistant', content: '' }])
     setInput('')
@@ -110,14 +133,14 @@ export function AIAgentDrawer() {
             <Textarea
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
+              onKeyDown={e => { handleHistoryKey(e); if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
               placeholder="Ask a French question..."
               className="resize-none min-h-[40px] max-h-[120px]"
               rows={1}
               disabled={isLoading}
             />
             <Button size="icon" onClick={handleSend} disabled={isLoading}>
-              <PaperPlaneTilt size={16} />
+              <PaperPlaneTiltIcon size={16} />
             </Button>
           </div>
         </div>

@@ -73,6 +73,39 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+.ttip {
+  position: relative;
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.ttip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  background-color: oklch(0.25 0.005 285);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 5px;
+  white-space: normal;
+  width: max-content;
+  max-width: 80vw;
+  line-height: 1.4;
+  text-align: left;
+  font-size: 0.8rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 1000;
+}
+
+.ttip:hover::after {
+  opacity: 1;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

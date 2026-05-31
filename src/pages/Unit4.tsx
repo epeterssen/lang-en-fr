@@ -1,7 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { PencilSimpleIcon, BooksIcon, ArrowsLeftRightIcon, FlameIcon, ProhibitIcon, GitBranchIcon, ListNumbersIcon, KeyIcon, CrownIcon } from '@phosphor-icons/react'
 import { ConjugationTable } from '@/components/ConjugationTable'
+import { SectionCard } from '@/components/SectionCard'
 import { RolodexView } from '@/components/RolodexView'
 import { UnitHeader } from '@/components/UnitHeader'
 import { useSettingsStore } from '@/store/settings'
@@ -31,7 +30,7 @@ const sections: Section[] = [
   {
     icon: <ListNumbersIcon size={22} weight="duotone" />,
     title: 'The Three Verb Groups (Les trois groupes)',
-    cardClass: 'border-l-4 border-l-[rgba(237,41,57,0.75)] backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(237,41,57,0.04)_0%,rgba(237,41,57,0.02)_100%)]',
+    variant: 'red' as const,
     content: [
       { detail: <strong>French grammarians classify all verbs into three formal groups. Knowing which group a verb belongs to tells you exactly how to conjugate it.</strong> },
       { detail: '' },
@@ -90,7 +89,7 @@ const sections: Section[] = [
     icon: <ArrowsLeftRightIcon size={22} weight="duotone" />,
     title: 'Regular -re Verbs (Verbes en -re)',
     content: [
-      { detail: <strong>-re verbs are the smallest regular group. Remove -re from the infinitive. The il/elle form adds no ending — just the bare stem.</strong> },
+      { detail: <strong>-re verbs are the smallest regular group. Remove -re from the infinitive. The il/elle form adds no ending, just the bare stem.</strong> },
       { detail: '' },
       { detail: 'Endings (vendre → vend-)' },
       { term: 'je', detail: <>-s: {TXT.ttip('je vends', 'I sell')}</> },
@@ -165,7 +164,7 @@ const sections: Section[] = [
     icon: <KeyIcon size={22} weight="duotone" />,
     title: 'The Essential Two: Être and Avoir',
     content: [
-      { detail: <strong>Être and avoir are the two most important verbs in French. Beyond their basic meanings, they have idiomatic uses that do not map directly to English — and they serve as auxiliary verbs for all compound tenses in later units.</strong> },
+      { detail: <strong>Être and avoir are the two most important verbs in French. Beyond their basic meanings, they have idiomatic uses that do not map directly to English. They also serve as auxiliary verbs for all compound verb tenses.</strong> },
       { detail: '' },
       { detail: 'Uses of être' },
       { term: 'Identity / description', detail: <>{TXT.ttip('Elle est médecin', 'She is a doctor')} (no article after être + profession)</> },
@@ -180,43 +179,77 @@ const sections: Section[] = [
       { term: 'Emotional states', detail: <>{TXT.ttip("j'ai peur", "I'm afraid")}, {TXT.ttip("j'ai honte", "I'm ashamed")}, {TXT.ttip("j'ai raison", "I'm right")}, {TXT.ttip("j'ai tort", "I'm wrong")}</> },
       { term: 'il y a', detail: <>{TXT.ttip("il y a un problème", 'there is a problem')}, {TXT.ttip("il y a des gens", 'there are people')} (there is / there are)</> },
       { detail: '' },
-      { detail: <strong>Both verbs are also used as auxiliaries to form compound tenses such as the passé composé — this is covered in a later unit.</strong> },
+      { detail: <strong>Both verbs are also used as auxiliaries to form compound tenses such as the passé composé. This is covered in a later unit.</strong> },
     ],
   },
   {
     icon: <CrownIcon size={22} weight="duotone" />,
-    title: 'Être and Avoir Conjugations',
+    title: 'Practice: Common Verbs',
     content: [
       { detail: <strong>Être and avoir must be memorized above all others. They appear in nearly every sentence and form the backbone of all compound tenses.</strong> },
       { detail: '' },
-      { detail: <ConjugationTable
-          title="être"
-          titleTooltip="to be"
-          tense="présent"
-          test={false}
-          entries={[
-            { pronoun: 'je', form: 'suis', tooltip: 'I am' },
-            { pronoun: 'nous', form: 'sommes', tooltip: 'we are' },
-            { pronoun: 'tu', form: 'es', tooltip: 'you are' },
-            { pronoun: 'vous', form: 'êtes', tooltip: 'you are' },
-            { pronoun: 'il / elle / on', form: 'est', tooltip: 'he / she is' },
-            { pronoun: 'ils / elles', form: 'sont', tooltip: 'they are' },
-          ]}
-        /> },
-      { detail: '' },
-      { detail: <ConjugationTable
-          title="avoir"
-          titleTooltip="to have"
-          tense="présent"
-          entries={[
-            { pronoun: 'je', form: 'ai', tooltip: 'I have' },
-            { pronoun: 'nous', form: 'avons', tooltip: 'we have' },
-            { pronoun: 'tu', form: 'as', tooltip: 'you have' },
-            { pronoun: 'vous', form: 'avez', tooltip: 'you have' },
-            { pronoun: 'il / elle / on', form: 'a', tooltip: 'he / she has' },
-            { pronoun: 'ils / elles', form: 'ont', tooltip: 'they have' },
-          ]}
-        /> },
+      { detail: <div className="flex flex-col sm:flex-row gap-12">
+          <ConjugationTable
+            title="être"
+            titleTooltip="to be"
+            tense="présent"
+            test={true}
+            entries={[
+              { pronoun: 'je', form: 'suis', tooltip: 'I am' },
+              { pronoun: 'nous', form: 'sommes', tooltip: 'we are' },
+              { pronoun: 'tu', form: 'es', tooltip: 'you are' },
+              { pronoun: 'vous', form: 'êtes', tooltip: 'you are' },
+              { pronoun: 'il / elle / on', form: 'est', tooltip: 'he / she is' },
+              { pronoun: 'ils / elles', form: 'sont', tooltip: 'they are' },
+            ]}
+          />
+          <div className="hidden sm:block border-l border-muted-foreground/40" />
+          <ConjugationTable
+            title="avoir"
+            titleTooltip="to have"
+            tense="présent"
+            test={true}
+            entries={[
+              { pronoun: 'je', form: 'ai', tooltip: 'I have' },
+              { pronoun: 'nous', form: 'avons', tooltip: 'we have' },
+              { pronoun: 'tu', form: 'as', tooltip: 'you have' },
+              { pronoun: 'vous', form: 'avez', tooltip: 'you have' },
+              { pronoun: 'il / elle / on', form: 'a', tooltip: 'he / she has' },
+              { pronoun: 'ils / elles', form: 'ont', tooltip: 'they have' },
+            ]}
+          />
+        </div> },
+      { detail: <div className="flex flex-col sm:flex-row gap-12 mt-6">
+          <ConjugationTable
+            title="aller"
+            titleTooltip="to go"
+            tense="présent"
+            test={true}
+            entries={[
+              { pronoun: 'je', form: 'vais', tooltip: 'I go' },
+              { pronoun: 'nous', form: 'allons', tooltip: 'we go' },
+              { pronoun: 'tu', form: 'vas', tooltip: 'you go' },
+              { pronoun: 'vous', form: 'allez', tooltip: 'you go' },
+              { pronoun: 'il / elle / on', form: 'va', tooltip: 'he / she goes' },
+              { pronoun: 'ils / elles', form: 'vont', tooltip: 'they go' },
+            ]}
+          />
+          <div className="hidden sm:block border-l border-muted-foreground/40" />
+          <ConjugationTable
+            title="faire"
+            titleTooltip="to do / make"
+            tense="présent"
+            test={true}
+            entries={[
+              { pronoun: 'je', form: 'fais', tooltip: 'I do' },
+              { pronoun: 'nous', form: 'faisons', tooltip: 'we do' },
+              { pronoun: 'tu', form: 'fais', tooltip: 'you do' },
+              { pronoun: 'vous', form: 'faites', tooltip: 'you do' },
+              { pronoun: 'il / elle / on', form: 'fait', tooltip: 'he / she does' },
+              { pronoun: 'ils / elles', form: 'font', tooltip: 'they do' },
+            ]}
+          />
+        </div> },
     ],
   },
 ]
@@ -233,30 +266,7 @@ export function Unit4() {
       ) : (
         <div className="flex-1 px-4 py-4 grid gap-4">
           {sections.map((section, i) => (
-            <Card key={i} className={section.cardClass ?? "border-l-4 border-l-[rgba(0,35,149,0.75)] backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]"}>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  {section.icon}
-                  {section.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-2 items-center">
-                  {section.content.map((item, j) => (
-                    item.term ? (
-                      <>
-                        <Badge key={`t-${j}`} variant="secondary" className="text-sm font-mono rounded-sm ![background-color:rgba(0,35,149,0.12)]">
-                          {item.term}
-                        </Badge>
-                        <dd key={`d-${j}`} className="text-sm text-muted-foreground">{item.detail}</dd>
-                      </>
-                    ) : (
-                      <dd key={`d-${j}`} className="col-span-2 text-sm text-muted-foreground">{item.detail}</dd>
-                    )
-                  ))}
-                </dl>
-              </CardContent>
-            </Card>
+            <SectionCard key={i} section={section} />
           ))}
         </div>
       )}

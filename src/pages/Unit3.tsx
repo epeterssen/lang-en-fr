@@ -1,6 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { UsersIcon, UserSwitchIcon, QuotesIcon, ArrowRightIcon, ArrowElbowRightIcon, ArrowsClockwiseIcon, MapPinIcon, LinkSimpleIcon } from '@phosphor-icons/react'
+import { SectionCard } from '@/components/SectionCard'
 import { RolodexView } from '@/components/RolodexView'
 import { UnitHeader, KeyE } from '@/components/UnitHeader'
 import { useSettingsStore } from '@/store/settings'
@@ -146,7 +145,7 @@ const sections: Section[] = [
   {
     icon: <LinkSimpleIcon size={22} weight="duotone" />,
     title: 'Relative Pronouns (Pronoms relatifs)',
-    cardClass: 'border-l-4 border-l-[rgba(237,41,57,0.75)] backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(237,41,57,0.04)_0%,rgba(237,41,57,0.02)_100%)]',
+    variant: 'red',
     content: [
       { detail: <strong className="text-[rgba(237,41,57,0.6)]">This is an advanced topic covered in a later unit. The overview below is for reference only.</strong> },
       { detail: '' },
@@ -171,30 +170,7 @@ export function Unit3() {
       ) : (
         <div className="flex-1 px-4 py-4 grid gap-4">
           {sections.map((section, i) => (
-            <Card key={i} className={section.cardClass ?? "border-l-4 border-l-[rgba(0,35,149,0.75)] backdrop-blur-md ![background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]"}>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  {section.icon}
-                  {section.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <dl className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-2 items-center">
-                  {section.content.map((item, j) => (
-                    item.term ? (
-                      <>
-                        <Badge key={`t-${j}`} variant="secondary" className="text-sm font-mono rounded-sm ![background-color:rgba(0,35,149,0.12)]">
-                          {item.term}
-                        </Badge>
-                        <dd key={`d-${j}`} className="text-sm text-muted-foreground">{item.detail}</dd>
-                      </>
-                    ) : (
-                      <dd key={`d-${j}`} className="col-span-2 text-sm text-muted-foreground">{item.detail}</dd>
-                    )
-                  ))}
-                </dl>
-              </CardContent>
-            </Card>
+            <SectionCard key={i} section={section} />
           ))}
         </div>
       )}

@@ -9,5 +9,5 @@ export interface Section {
   icon: ReactNode
   title: string
   content: ContentItem[]
-  cardClass?: string
+  variant?: 'red'
 }

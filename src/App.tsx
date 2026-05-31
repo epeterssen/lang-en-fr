@@ -5,6 +5,7 @@ import { MainMenu } from '@/pages/MainMenu'
 import { Unit1 } from '@/pages/Unit1'
 import { Unit2 } from '@/pages/Unit2'
 import { Unit3 } from '@/pages/Unit3'
+import { Unit4 } from '@/pages/Unit4'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/unit/1" element={<Unit1 />} />
           <Route path="/unit/2" element={<Unit2 />} />
           <Route path="/unit/3" element={<Unit3 />} />
+          <Route path="/unit/4" element={<Unit4 />} />
         </Route>
       </Routes>
     </BrowserRouter>

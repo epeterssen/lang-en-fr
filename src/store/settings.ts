@@ -14,6 +14,6 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   toggleBackground: () => set((s) => ({ showBackground: !s.showBackground })),
   allowCopyPaste: false,
   toggleCopyPaste: () => set((s) => ({ allowCopyPaste: !s.allowCopyPaste })),
-  rolodex: true,
+  rolodex: false,
   toggleRolodex: () => set((s) => ({ rolodex: !s.rolodex })),
 }))

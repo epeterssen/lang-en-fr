@@ -112,7 +112,7 @@ export function AIAgentDrawer() {
       </DrawerTrigger>
       <DrawerContent className="h-[50vh] backdrop-blur-2xl border-t border-grey/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] [background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
         <DrawerHeader className="pb-2">
-          <DrawerTitle>French Language Tutor</DrawerTitle>
+          <DrawerTitle>French AI Agent</DrawerTitle>
         </DrawerHeader>
         <div className="flex flex-col flex-1 overflow-hidden px-4 pb-4 gap-3">
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">

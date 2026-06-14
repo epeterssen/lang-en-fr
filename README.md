@@ -1,94 +1,99 @@
-# React + TypeScript + Vite
+# lang-en-fr — French Language Learning App
 
-## AI Agent
+[Persistence](./documentation\persistence.md)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-api key: log into https://platform.claude.com/login?returnTo=%2F%3F
-Key name: understandingfrench 
-Workspace: default.
-Github: https://github.com/epeterssen/lang-en-fr
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+A React single-page app for learning French, deployed on AWS. The frontend is static (no server) and communicates with an AWS Lambda function for AI-powered Q&A. The Lambda holds the Anthropic API key server-side so it is never exposed to the browser.
 
 ---
 
 ## Architecture
 
-### Hosting & Backend
-- **Frontend**: Deployed on AWS Amplify (auto-deploys from GitHub `main`)
-- **AI Backend**: AWS Lambda function (function URL) — holds the Anthropic API key server-side
-- **API Key**: Stored in Lambda environment variables (never in the frontend bundle)
-- **Frontend → Lambda**: `VITE_CHAT_API_URL` in `.env` / `.env.production`
-
-### Frontend Stack
-- React 18 + TypeScript + Vite
-- Tailwind CSS + shadcn/ui
-- Phosphor Icons v2 (`Icon` suffix naming)
-- Zustand (settings store)
-- React Router v6
-
-### Login
-[Amplify](https://us-east-2.signin.aws.amazon.com/oauth?response_type=code&client_id=arn%3Aaws%3Asignin%3A%3A%3Aconsole%2Fcanvas&redirect_uri=https%3A%2F%2Fus-east-2.console.aws.amazon.com%2Fconsole%2Fhome%3Fca-oauth-flow-id%3D883d%26hashArgs%3D%2523%26isauthcode%3Dtrue%26region%3Dus-east-2%26state%3DhashArgsFromTB_us-east-2_61ac8f8f8ef6b417&forceMobileLayout=0&forceMobileApp=0&code_challenge=vZ-3B9gfgj-kfmsGVwL7Eg0ypc7pWsZJS7c68VXsJGo&code_challenge_method=SHA-256): 
-'Sign in using root user email' > Root user > email > password > continue.
-* Make sure region is: us-east-1 (switch to us-east-1 in the AWS Console (top-right region dropdown).
-* Lambda: https://r45rvnktkxozmxltletq73zmg40fpoju.lambda-url.us-east-1.on.aws/).
+```
+Browser
+  └── React SPA (AWS Amplify)
+        └── AIAgentDrawer ──HTTP──> AWS Lambda (us-east-1)
+                                        └── Anthropic API (claude-sonnet-4-6)
+```
 
 ---
 
-## Component Map
+## 1. Frontend (React SPA)
 
-- `App.tsx` — router, top-level layout
-  - `Layout.tsx` — shell with sticky header and drawer trigger
-    - `FlagBanner.tsx` — French flag accent bar
-    - `HamburgerMenu.tsx` — settings toggles (background, copy-paste, rolodex)
-    - `AIAgentDrawer.tsx` — slide-up AI chat drawer (connects to Lambda via `VITE_CHAT_API_URL`)
-  - `pages/Home.tsx` — landing page
-  - `pages/MainMenu.tsx` — 8-unit accordion menu
-  - `pages/Unit1.tsx` — Foundations
-  - `pages/Unit2.tsx` — Nouns and Articles
-  - `pages/Unit3.tsx` — Pronouns
-  - `pages/Unit4.tsx` — Present Tense Verbs
-- `components/SectionCard.tsx` — shared card renderer (blue/red variant, badge color auto-matched)
-- `components/ConjugationTable.tsx` — verb conjugation table with test/reveal mode and toggle
-- `components/RolodexView.tsx` — card carousel (swipe/scroll/drag)
-- `components/UnitHeader.tsx` — sticky unit title with key-entry badges
-- `utils/txt.tsx` — `TXT.ttip()` hover tooltip utility (supports toggle/reverse)
-- `types.ts` — shared `Section` and `ContentItem` interfaces
-- `store/settings.ts` — Zustand store (showBackground, allowCopyPaste, rolodex)
+**Stack:** React 18 · TypeScript · Vite · Tailwind CSS · shadcn/ui · Phosphor Icons v2 · Zustand · React Router v6
+
+**Repo:** https://github.com/epeterssen/lang-en-fr
+
+**Deployed via:** AWS Amplify — auto-deploys on every push to `main`.
+
+### Key Files
+
+| File | Purpose |
+|---|---|
+| `src/App.tsx` | Router and top-level layout |
+| `src/components/Layout.tsx` | Shell: sticky header, drawer trigger |
+| `src/components/FlagBanner.tsx` | French flag accent bar |
+| `src/components/HamburgerMenu.tsx` | Settings toggles (background, copy-paste, rolodex) |
+| `src/components/AIAgentDrawer.tsx` | Slide-up AI chat drawer |
+| `src/components/SectionCard.tsx` | Shared card (blue/red variant, badge color auto-matched) |
+| `src/components/ConjugationTable.tsx` | Verb conjugation table with test/reveal toggle |
+| `src/components/RolodexView.tsx` | Card carousel (swipe/scroll/drag) |
+| `src/components/UnitHeader.tsx` | Sticky unit title with key-entry badges |
+| `src/pages/Home.tsx` | Landing page |
+| `src/pages/MainMenu.tsx` | 8-unit accordion menu |
+| `src/pages/Unit1.tsx` | Unit 1: Foundations |
+| `src/pages/Unit2.tsx` | Unit 2: Nouns and Articles |
+| `src/pages/Unit3.tsx` | Unit 3: Pronouns |
+| `src/pages/Unit4.tsx` | Unit 4: Present Tense Verbs |
+| `src/utils/txt.tsx` | `TXT.ttip()` hover tooltip utility |
+| `src/types.ts` | Shared `Section` / `ContentItem` types |
+| `src/store/settings.ts` | Zustand store (showBackground, allowCopyPaste, rolodex) |
+| `.env` / `.env.production` | `VITE_CHAT_API_URL` — Lambda endpoint |
+
+### To Update
+- **Add a unit:** Create `src/pages/UnitN.tsx`, add a route in `App.tsx`, link it in `MainMenu.tsx`
+- **Change Lambda URL:** Edit `VITE_CHAT_API_URL` in both `.env` and `.env.production`, redeploy via Amplify
 
 ---
 
-## Configuration
+## 2. AI Backend (AWS Lambda)
 
-### Updating the Lambda Function Code
-The Lambda source is at `lambda/handler.mjs` in this repo. To deploy changes:
-1. Open the Lambda function in the AWS Console (us-east-1)
-2. Click the **Code** tab
-3. Paste the contents of `lambda/handler.mjs` into the editor
-4. Click **Deploy**
+**Region:** us-east-1  
+**Function URL:** `https://r45rvnktkxozmxltletq73zmg40fpoju.lambda-url.us-east-1.on.aws/`  
+**Source:** `lambda/handler.mjs` in this repo  
+**Runtime:** Node.js (ESM)
 
-### Updating the Lambda URL
-Edit `.env` and `.env.production`:
-```
-VITE_CHAT_API_URL=https://<your-lambda-url>.lambda-url.<region>.on.aws/
-```
+The Lambda receives the conversation history from the drawer, forwards it to the Anthropic API, and returns the assistant reply. The Anthropic API key never leaves the Lambda.
 
-### Updating the Anthropic API Key
-1. Log in to the AWS Console
-2. Navigate to Lambda → your function
-3. Go to Configuration → Environment variables
-4. Update `ANTHROPIC_API_KEY`
+### To Update the Lambda Code
+1. Edit `lambda/handler.mjs` locally
+2. In the AWS Console → Lambda → function → **Code** tab
+3. Paste the updated file contents and click **Deploy**
 
-### Rotating the Anthropic API Key
-1. Log in to https://platform.claude.com
-2. Workspace: Default — Key name: `understandingfrench`
-3. Create a new key, update Lambda env var, then revoke the old key
+### To Rotate the Anthropic API Key
+1. Go to https://platform.claude.com — Workspace: Default — Key name: `understandingfrench`
+2. Create a new key
+3. In AWS Console → Lambda → function → **Configuration** → **Environment variables**
+4. Update `ANTHROPIC_API_KEY` with the new key
+5. Revoke the old key on platform.claude.com
 
-### Deploying
-Push to `main` on GitHub — Amplify auto-deploys.
-Manual deploy available in the AWS Amplify Console.
+---
 
+## 3. AWS Console Access
+
+**Login:** https://us-east-2.signin.aws.amazon.com — *Sign in using root user email*  
+**Important:** Switch region to **us-east-1** (top-right dropdown) after login — Lambda lives there, not us-east-2.
+
+**Services used:**
+- **Amplify** — frontend hosting and CI/CD
+- **Lambda** — AI backend function
+
+---
+
+## 4. Anthropic API
+
+**Console:** https://platform.claude.com  
+**Workspace:** Default  
+**Key name:** `understandingfrench`  
+**Model:** `claude-sonnet-4-6`

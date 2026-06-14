@@ -1,9 +1,6 @@
 import { PencilSimpleIcon, BooksIcon, ArrowsLeftRightIcon, FlameIcon, ProhibitIcon, GitBranchIcon, ListNumbersIcon, KeyIcon, CrownIcon } from '@phosphor-icons/react'
 import { ConjugationTable } from '@/components/ConjugationTable'
-import { SectionCard } from '@/components/SectionCard'
-import { RolodexView } from '@/components/RolodexView'
-import { UnitHeader } from '@/components/UnitHeader'
-import { useSettingsStore } from '@/store/settings'
+import { UnitPage } from '@/components/UnitPage'
 import { TXT } from '@/utils/txt'
 import type { Section } from '@/types'
 
@@ -255,21 +252,5 @@ const sections: Section[] = [
 ]
 
 export function Unit4() {
-  const rolodex = useSettingsStore((s) => s.rolodex)
-
-  return (
-    <div className="flex flex-col">
-      <UnitHeader title="Unit 4: Present Tense Verbs" />
-
-      {rolodex ? (
-        <RolodexView sections={sections} />
-      ) : (
-        <div className="flex-1 px-4 py-4 grid gap-4">
-          {sections.map((section, i) => (
-            <SectionCard key={i} section={section} />
-          ))}
-        </div>
-      )}
-    </div>
-  )
+  return <UnitPage title="Unit 4: Present Tense Verbs" sections={sections} />;
 }

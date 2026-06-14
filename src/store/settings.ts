@@ -9,6 +9,8 @@ interface SettingsState {
   toggleRolodex: () => void
   currentPageContext: string
   setCurrentPageContext: (ctx: string) => void
+  currentPageTitle: string
+  setCurrentPageTitle: (title: string) => void
 }
 
 export const useSettingsStore = create<SettingsState>((set) => ({
@@ -20,4 +22,6 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   toggleRolodex: () => set((s) => ({ rolodex: !s.rolodex })),
   currentPageContext: '',
   setCurrentPageContext: (ctx) => set({ currentPageContext: ctx }),
+  currentPageTitle: '',
+  setCurrentPageTitle: (title) => set({ currentPageTitle: title }),
 }))

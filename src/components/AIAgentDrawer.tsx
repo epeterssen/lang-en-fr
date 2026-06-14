@@ -12,8 +12,15 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 
-const API_URL = import.meta.env.VITE_CHAT_API_URL
+const API_URL = import.meta.env.VITE_CHAT_API_URL;
 
+const FOLLOW_UP_CHIPS = ['Quiz me on this unit', 'Give me an example', 'How do I remember this?'];
+
+function greeting(title: string) {
+  return title
+    ? `You're on **${title}**. Ask me anything, or type **Quiz** to test yourself.`
+    : 'Ask me anything about the French language, or type **Quiz** to test yourself.';
+}
 
 function TypingDots() {
   return (
@@ -26,28 +33,33 @@ function TypingDots() {
         />
       ))}
     </span>
-  )
+  );
 }
 
 interface Message {
-  role: 'user' | 'assistant'
-  content: string
+  role: 'user' | 'assistant';
+  content: string;
 }
 
 export function AIAgentDrawer() {
-  const allowCopyPaste = useSettingsStore((s) => s.allowCopyPaste)
-  const currentPageContext = useSettingsStore((s) => s.currentPageContext)
+  const allowCopyPaste = useSettingsStore((s) => s.allowCopyPaste);
+  const currentPageContext = useSettingsStore((s) => s.currentPageContext);
+  const currentPageTitle = useSettingsStore((s) => s.currentPageTitle);
 
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Ask me anything about the French language.' },
-  ])
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+    { role: 'assistant', content: greeting(currentPageTitle) },
+  ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const questionHistory = useRef<string[]>([])
-  const historyIndex = useRef(-1)
-  const inputDraft = useRef('')
+  const questionHistory = useRef<string[]>([]);
+  const historyIndex = useRef(-1);
+  const inputDraft = useRef('');
+
+  useEffect(() => {
+    setMessages([{ role: 'assistant', content: greeting(currentPageTitle) }]);
+  }, [currentPageTitle]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,31 +71,31 @@ export function AIAgentDrawer() {
 
   function handleHistoryKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === 'ArrowUp') {
-      if (questionHistory.current.length === 0) return
-      e.preventDefault()
-      if (historyIndex.current === -1) inputDraft.current = input
-      const next = Math.min(historyIndex.current + 1, questionHistory.current.length - 1)
-      historyIndex.current = next
-      setInput(questionHistory.current[next])
+      if (questionHistory.current.length === 0) return;
+      e.preventDefault();
+      if (historyIndex.current === -1) inputDraft.current = input;
+      const next = Math.min(historyIndex.current + 1, questionHistory.current.length - 1);
+      historyIndex.current = next;
+      setInput(questionHistory.current[next]);
     } else if (e.key === 'ArrowDown') {
-      if (historyIndex.current === -1) return
-      e.preventDefault()
-      const next = historyIndex.current - 1
-      historyIndex.current = next
-      setInput(next < 0 ? inputDraft.current : questionHistory.current[next])
+      if (historyIndex.current === -1) return;
+      e.preventDefault();
+      const next = historyIndex.current - 1;
+      historyIndex.current = next;
+      setInput(next < 0 ? inputDraft.current : questionHistory.current[next]);
     }
   }
 
-  async function handleSend() {
-    if (!input.trim() || isLoading) return
-    const userMessage = input.trim()
-    questionHistory.current = [userMessage, ...questionHistory.current]
-    historyIndex.current = -1
-    inputDraft.current = ''
-    const history: Message[] = [...messages, { role: 'user', content: userMessage }]
-    setMessages([...history, { role: 'assistant', content: '' }])
-    setInput('')
-    setIsLoading(true)
+  async function sendMessage(text: string) {
+    if (!text.trim() || isLoading) return;
+    const userMessage = text.trim();
+    questionHistory.current = [userMessage, ...questionHistory.current];
+    historyIndex.current = -1;
+    inputDraft.current = '';
+    const history: Message[] = [...messages, { role: 'user', content: userMessage }];
+    setMessages([...history, { role: 'assistant', content: '' }]);
+    setInput('');
+    setIsLoading(true);
 
     try {
       if (!API_URL) throw new Error('VITE_CHAT_API_URL is not set');
@@ -139,6 +151,9 @@ export function AIAgentDrawer() {
     }
   }
 
+  const lastIsAssistant = messages[messages.length - 1]?.role === 'assistant';
+  const showChips = !isLoading && lastIsAssistant && messages.length > 1;
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -178,6 +193,19 @@ export function AIAgentDrawer() {
                 </div>
               </div>
             ))}
+            {showChips && (
+              <div className="flex flex-wrap gap-2 justify-start pl-1">
+                {FOLLOW_UP_CHIPS.map(chip => (
+                  <button
+                    key={chip}
+                    onClick={() => sendMessage(chip)}
+                    className="text-xs px-2.5 py-1 rounded-full border transition-colors [border-color:rgba(0,35,149,0.25)] [color:rgba(0,35,149,0.6)] hover:[background-color:rgba(0,35,149,0.06)]"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
             <div ref={bottomRef} />
           </div>
           <div className="flex gap-2 items-end">
@@ -185,18 +213,18 @@ export function AIAgentDrawer() {
               ref={textareaRef}
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => { handleHistoryKey(e); if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+              onKeyDown={e => { handleHistoryKey(e); if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}
               placeholder="Ask a French question..."
               className="resize-none min-h-[40px] max-h-[120px]"
               rows={1}
               disabled={isLoading}
             />
-            <Button size="icon" onClick={handleSend} disabled={isLoading}>
+            <Button size="icon" onClick={() => sendMessage(input)} disabled={isLoading}>
               <PaperPlaneTiltIcon size={16} />
             </Button>
           </div>
         </div>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }

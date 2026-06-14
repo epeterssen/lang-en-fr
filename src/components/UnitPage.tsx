@@ -14,11 +14,13 @@ interface UnitPageProps {
 export function UnitPage({ title, sections }: UnitPageProps) {
   const rolodex = useSettingsStore((s) => s.rolodex);
   const setCurrentPageContext = useSettingsStore((s) => s.setCurrentPageContext);
+  const setCurrentPageTitle = useSettingsStore((s) => s.setCurrentPageTitle);
 
   useEffect(() => {
     setCurrentPageContext(sectionsToContext(sections));
-    return () => setCurrentPageContext('');
-  }, [sections]);
+    setCurrentPageTitle(title);
+    return () => { setCurrentPageContext(''); setCurrentPageTitle(''); };
+  }, [sections, title]);
 
   return (
     <div className="flex flex-col">

@@ -1,9 +1,11 @@
-import { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
-import { HamburgerMenu } from '@/components/HamburgerMenu'
-import { FlagBanner } from '@/components/FlagBanner'
-import { AIAgentDrawer } from '@/components/AIAgentDrawer'
-import { useSettingsStore } from '@/store/settings'
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { ListIcon } from '@phosphor-icons/react';
+import { HamburgerMenu } from '@/components/HamburgerMenu';
+import { FlagBanner } from '@/components/FlagBanner';
+import { AIAgentDrawer } from '@/components/AIAgentDrawer';
+import { Button } from '@/components/ui/button';
+import { useSettingsStore } from '@/store/settings';
 
 export function Layout() {
   const showBackground = useSettingsStore((s) => s.showBackground)
@@ -16,10 +18,16 @@ export function Layout() {
     <div className="min-h-screen flex flex-col text-foreground">
       <header className="sticky top-0 z-20 relative bg-background">
         <FlagBanner />
-        <h1 className="absolute inset-0 flex items-center justify-center text-4xl font-bold">Understanding French</h1>
-        <div className="absolute top-1/2 right-4 -translate-y-1/2 flex items-center gap-1">
-          <AIAgentDrawer />
-          <HamburgerMenu />
+        <div className="absolute inset-0 flex items-center px-4 gap-2">
+          <div className="flex-none flex items-center gap-1 invisible" aria-hidden="true">
+            <Button variant="ghost" size="sm">AI Agent</Button>
+            <Button variant="ghost" size="icon"><ListIcon size={22} /></Button>
+          </div>
+          <h1 className="flex-1 min-w-0 text-center font-bold text-2xl sm:text-4xl truncate">Understanding French</h1>
+          <div className="flex-none flex items-center gap-1">
+            <AIAgentDrawer />
+            <HamburgerMenu />
+          </div>
         </div>
       </header>
 

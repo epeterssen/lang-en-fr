@@ -1,9 +1,10 @@
-import { List } from '@phosphor-icons/react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/store/auth'
-import { useSettingsStore } from '@/store/settings'
+import { List } from '@phosphor-icons/react';
+import { useNavigate } from 'react-router-dom';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth';
+import { useSettingsStore } from '@/store/settings';
 
 function initials(name: string) {
   return name
@@ -15,8 +16,9 @@ function initials(name: string) {
 }
 
 export function HamburgerMenu() {
-  const { user, login, logout } = useAuthStore()
-  const { showBackground, toggleBackground, allowCopyPaste, toggleCopyPaste, rolodex, toggleRolodex } = useSettingsStore()
+  const navigate = useNavigate();
+  const { user, login, logout } = useAuthStore();
+  const { showBackground, toggleBackground, allowCopyPaste, toggleCopyPaste, rolodex, toggleRolodex } = useSettingsStore();
 
   return (
     <Sheet>
@@ -75,6 +77,15 @@ export function HamburgerMenu() {
             >
               <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${rolodex ? 'left-5' : 'left-1'}`} />
             </button>
+          </div>
+
+          <div className="border-t border-border/50 pt-4 mt-2">
+            <p className="text-xs text-muted-foreground px-1 mb-2 uppercase tracking-wide">Explore</p>
+            <SheetClose asChild>
+              <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/wine')}>
+                Bordeaux Wine Regions
+              </Button>
+            </SheetClose>
           </div>
 
           {user && (

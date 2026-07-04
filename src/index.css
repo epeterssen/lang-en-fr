@@ -102,6 +102,21 @@
   z-index: 1000;
 }
 
+.chateau-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: rgba(139, 0, 0, 0.9);
+  font-size: 0.65rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0 !important;
+  opacity: 0;
+}
+.chateau-tooltip::before {
+  display: none !important;
+}
+
 .ttip:hover::after {
   opacity: 1;
 }

@@ -33,10 +33,8 @@ export function WineRegionPage() {
     <div className="flex flex-col">
       <WineSubHeader>
         <Button variant="ghost" size="sm" className="-ml-2 text-muted-foreground" onClick={() => navigate('/wine')}>
-          ← All Regions
+          Bordeaux Wine Regions
         </Button>
-        <CaretRightIcon size={14} className="text-muted-foreground/50 shrink-0" />
-        <span className="text-sm text-muted-foreground">Bordeaux Wine Regions</span>
         <CaretRightIcon size={14} className="text-muted-foreground/50 shrink-0" />
         <span className="text-sm font-semibold">{region.name}</span>
         {region.designation && (
@@ -54,7 +52,7 @@ export function WineRegionPage() {
       {geojson && (
         <LeafletMap
           geojson={geojson}
-          height="calc(100vh - 160px)"
+          height="calc(100dvh - 160px)"
           multiRegion={region.file.startsWith('All-Regions')}
         />
       )}

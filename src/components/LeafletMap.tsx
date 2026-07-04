@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point as turfPoint } from '@turf/helpers';
+import { LEFT_BANK } from '@/data/wineRegions';
 
 interface LeafletMapProps {
   geojson: object;
@@ -60,12 +61,6 @@ function bboxArea(feature: GeoJSON.Feature): number {
   return (bounds.getEast() - bounds.getWest()) * (bounds.getNorth() - bounds.getSouth());
 }
 
-const LEFT_BANK = new Set([
-  'Barsac', 'Cerons', 'Graves', 'Graves Superieures', 'Haut Medoc',
-  'Listrac Medoc', 'Loupiac', 'Margaux', 'Medoc', 'Moulis en Medoc',
-  'Pauillac', 'Pessac Leognan', 'Sauternes', 'St Croix du Mont',
-  'St Estephe', 'St Julien',
-]);
 
 type LayerEntry = { layer: L.Path; feature: GeoJSON.Feature };
 
@@ -200,12 +195,12 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
               </label>
             ));
             return (
-              <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-44 flex flex-col">
-                <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none">
+              <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-32 sm:w-44 max-w-[40vw] flex flex-col overflow-hidden" style={{ maxHeight: '80dvh' }}>
+                <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none shrink-0">
                   <input type="checkbox" checked={allChecked} onChange={toggleAll} className="accent-primary" />
                   <span className="text-xs font-semibold text-foreground">All Regions</span>
                 </label>
-                <div style={{ maxHeight: '80%' }} className="overflow-y-auto">
+                <div className="overflow-y-auto flex-1 min-h-0">
                   <div className="px-2.5 pt-1.5 pb-0.5">
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Left Bank</span>
                   </div>

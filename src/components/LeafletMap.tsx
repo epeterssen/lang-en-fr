@@ -53,6 +53,13 @@ function bboxArea(feature: GeoJSON.Feature): number {
   return (bounds.getEast() - bounds.getWest()) * (bounds.getNorth() - bounds.getSouth());
 }
 
+const LEFT_BANK = new Set([
+  'Barsac', 'Cerons', 'Graves', 'Graves Superieures', 'Haut Medoc',
+  'Listrac Medoc', 'Loupiac', 'Margaux', 'Medoc', 'Moulis en Medoc',
+  'Pauillac', 'Pessac Leognan', 'Sauternes', 'St Croix du Mont',
+  'St Estephe', 'St Julien',
+]);
+
 type LayerEntry = { layer: L.Path; feature: GeoJSON.Feature };
 
 export function LeafletMap({ geojson, height = 480, multiRegion = false }: LeafletMapProps) {
@@ -169,32 +176,39 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
             className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none px-3 py-1.5 rounded-md text-sm font-medium bg-background/90 border border-border shadow-sm transition-opacity duration-75"
             style={{ opacity: 0 }}
           />
-          {regionNames.length > 0 && (
-            <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-44 flex flex-col">
-              <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none">
+          {regionNames.length > 0 && (() => {
+            const leftBank = regionNames.filter(n => LEFT_BANK.has(n));
+            const rightBank = regionNames.filter(n => !LEFT_BANK.has(n));
+            const renderGroup = (names: string[]) => names.map(name => (
+              <label key={name} className="flex items-center gap-2 px-2.5 py-0.5 cursor-pointer select-none hover:bg-muted/40">
                 <input
                   type="checkbox"
-                  checked={allChecked}
-                  onChange={toggleAll}
-                  className="accent-primary"
+                  checked={checked.has(name)}
+                  onChange={() => toggleRegion(name)}
+                  className="accent-primary shrink-0"
                 />
-                <span className="text-xs font-semibold text-foreground">All Regions</span>
+                <span className="text-xs text-foreground truncate">{name}</span>
               </label>
-              <div style={{ maxHeight: '80%' }} className="overflow-y-auto">
-                {regionNames.map(name => (
-                  <label key={name} className="flex items-center gap-2 px-2.5 py-0.5 cursor-pointer select-none hover:bg-muted/40">
-                    <input
-                      type="checkbox"
-                      checked={checked.has(name)}
-                      onChange={() => toggleRegion(name)}
-                      className="accent-primary shrink-0"
-                    />
-                    <span className="text-xs text-foreground truncate">{name}</span>
-                  </label>
-                ))}
+            ));
+            return (
+              <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-44 flex flex-col">
+                <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none">
+                  <input type="checkbox" checked={allChecked} onChange={toggleAll} className="accent-primary" />
+                  <span className="text-xs font-semibold text-foreground">All Regions</span>
+                </label>
+                <div style={{ maxHeight: '80%' }} className="overflow-y-auto">
+                  <div className="px-2.5 pt-1.5 pb-0.5">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Left Bank</span>
+                  </div>
+                  {renderGroup(leftBank)}
+                  <div className="px-2.5 pt-2 pb-0.5 border-t border-border/50 mt-1">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Right Bank</span>
+                  </div>
+                  {renderGroup(rightBank)}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </>
       )}
     </div>

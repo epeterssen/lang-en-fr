@@ -61,6 +61,7 @@ const filenames = [
   'St-Foy-Bordeaux-AOP_Bordeaux_France.geojson',
   'St-Georges-St-Emilion-AOP_Bordeaux_France.geojson',
   'St-Julien-AOP_Bordeaux_France.geojson',
+  'All-Regions-AOP_Bordeaux_France.geojson',
 ];
 
 export const wineRegions: WineRegion[] = filenames.map(parse);

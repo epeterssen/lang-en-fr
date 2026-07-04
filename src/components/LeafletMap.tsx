@@ -1,18 +1,94 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { point as turfPoint } from '@turf/helpers';
 
 interface LeafletMapProps {
   geojson: object;
   height?: number | string;
+  multiRegion?: boolean;
 }
 
-export function LeafletMap({ geojson, height = 480 }: LeafletMapProps) {
+const GOLDEN_ANGLE = 137.508;
+const regionHueCache = new Map<string, number>();
+let regionIndex = 0;
+
+function hueForRegion(name: string): number {
+  if (!regionHueCache.has(name)) {
+    regionHueCache.set(name, (regionIndex++ * GOLDEN_ANGLE) % 360);
+  }
+  return regionHueCache.get(name)!;
+}
+
+const STYLE_OVERRIDES: Partial<Record<string, L.PathOptions>> = {
+  'Pauillac':   { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 70%, 55%)', fillOpacity: 0.15 },
+  'Haut Medoc': { color: 'hsl(263, 90%, 20%)', weight: 3,   fillColor: 'hsl(263, 60%, 55%)', fillOpacity: 0.15 },
+  'Medoc':      { color: 'hsl(263, 90%, 20%)', weight: 3,   fillColor: 'hsl(263, 60%, 30%)', fillOpacity: 0.30 },
+};
+
+function regionStyle(feature?: GeoJSON.Feature): L.PathOptions {
+  const name = (feature?.properties as Record<string, unknown>)?.region as string | undefined;
+  if (!name) return defaultStyle;
+  const h = hueForRegion(name);
+  if (STYLE_OVERRIDES[name]) return STYLE_OVERRIDES[name]!;
+  return {
+    color: `hsl(${h}, 70%, 35%)`,
+    weight: 1.5,
+    fillColor: `hsl(${h}, 60%, 55%)`,
+    fillOpacity: 0.15,
+  };
+}
+
+const defaultStyle: L.PathOptions = {
+  color: 'rgba(139,0,0,0.8)',
+  weight: 2,
+  fillColor: 'rgba(139,0,0,0.15)',
+  fillOpacity: 1,
+};
+
+function bboxArea(feature: GeoJSON.Feature): number {
+  const bounds = L.geoJSON(feature).getBounds();
+  if (!bounds.isValid()) return 0;
+  return (bounds.getEast() - bounds.getWest()) * (bounds.getNorth() - bounds.getSouth());
+}
+
+type LayerEntry = { layer: L.Path; feature: GeoJSON.Feature };
+
+export function LeafletMap({ geojson, height = 480, multiRegion = false }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+  const regionLayersRef = useRef<Map<string, LayerEntry[]>>(new Map());
+
+  const regionNames = useMemo(() => {
+    if (!multiRegion) return [];
+    const fc = geojson as GeoJSON.FeatureCollection;
+    return [...new Set(
+      (fc.features ?? [])
+        .map(f => (f.properties as Record<string, unknown>)?.region as string)
+        .filter(Boolean),
+    )].sort();
+  }, [geojson, multiRegion]);
+
+  const [checked, setChecked] = useState<Set<string>>(() => new Set(regionNames));
+
+  useEffect(() => {
+    setChecked(new Set(regionNames));
+  }, [regionNames]);
+
+  useEffect(() => {
+    regionLayersRef.current.forEach((entries, name) => {
+      const visible = checked.has(name);
+      entries.forEach(({ layer, feature }) => {
+        layer.setStyle(visible ? regionStyle(feature) : { opacity: 0, fillOpacity: 0 });
+      });
+    });
+  }, [checked]);
 
   useEffect(() => {
     if (!containerRef.current) return;
+    regionLayersRef.current = new Map();
 
     const map = L.map(containerRef.current);
     mapRef.current = map;
@@ -22,18 +98,42 @@ export function LeafletMap({ geojson, height = 480 }: LeafletMapProps) {
       maxZoom: 19,
     }).addTo(map);
 
-    const layer = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0], {
-      style: {
-        color: 'rgba(139,0,0,0.8)',
-        weight: 2,
-        fillColor: 'rgba(139,0,0,0.15)',
-        fillOpacity: 1,
-      },
+    type FeatureEntry = { name: string; area: number; feature: GeoJSON.Feature };
+    const featureIndex: FeatureEntry[] = [];
+
+    L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0], {
+      style: multiRegion ? regionStyle : defaultStyle,
+      onEachFeature: multiRegion ? (feature, layer) => {
+        const name = (feature.properties as Record<string, unknown>)?.region as string | undefined;
+        if (!name) return;
+        featureIndex.push({ name, area: bboxArea(feature), feature });
+        if (!regionLayersRef.current.has(name)) {
+          regionLayersRef.current.set(name, []);
+        }
+        regionLayersRef.current.get(name)!.push({ layer: layer as L.Path, feature });
+      } : undefined,
     }).addTo(map);
 
-    const bounds = layer.getBounds();
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [32, 32] });
+    if (multiRegion) {
+      const setLabel = (name: string) => {
+        if (!labelRef.current) return;
+        labelRef.current.textContent = name;
+        labelRef.current.style.opacity = name ? '1' : '0';
+      };
+
+      map.on('mousemove', (e) => {
+        const pt = turfPoint([e.latlng.lng, e.latlng.lat]);
+        const hit = featureIndex
+          .filter(f => booleanPointInPolygon(pt, f.feature as Parameters<typeof booleanPointInPolygon>[1]))
+          .sort((a, b) => a.area - b.area)[0];
+        setLabel(hit?.name ?? '');
+      });
+      map.on('mouseout', () => setLabel(''));
+    }
+
+    const allBounds = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0]).getBounds();
+    if (allBounds.isValid()) {
+      map.fitBounds(allBounds, { padding: [32, 32] });
     } else {
       map.setView([44.8, -0.6], 9);
     }
@@ -42,7 +142,61 @@ export function LeafletMap({ geojson, height = 480 }: LeafletMapProps) {
       map.remove();
       mapRef.current = null;
     };
-  }, [geojson]);
+  }, [geojson, multiRegion]);
 
-  return <div ref={containerRef} style={{ height }} className="w-full rounded-lg border border-border/50 z-0" />;
+  const allChecked = regionNames.every(n => checked.has(n));
+
+  const toggleRegion = (name: string) => {
+    setChecked(prev => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setChecked(allChecked ? new Set() : new Set(regionNames));
+  };
+
+  return (
+    <div style={{ height }} className="relative w-full">
+      <div ref={containerRef} className="w-full h-full rounded-lg border border-border/50 z-0" />
+      {multiRegion && (
+        <>
+          <div
+            ref={labelRef}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none px-3 py-1.5 rounded-md text-sm font-medium bg-background/90 border border-border shadow-sm transition-opacity duration-75"
+            style={{ opacity: 0 }}
+          />
+          {regionNames.length > 0 && (
+            <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-44 flex flex-col">
+              <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={allChecked}
+                  onChange={toggleAll}
+                  className="accent-primary"
+                />
+                <span className="text-xs font-semibold text-foreground">All Regions</span>
+              </label>
+              <div style={{ maxHeight: '80%' }} className="overflow-y-auto">
+                {regionNames.map(name => (
+                  <label key={name} className="flex items-center gap-2 px-2.5 py-0.5 cursor-pointer select-none hover:bg-muted/40">
+                    <input
+                      type="checkbox"
+                      checked={checked.has(name)}
+                      onChange={() => toggleRegion(name)}
+                      className="accent-primary shrink-0"
+                    />
+                    <span className="text-xs text-foreground truncate">{name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 }

@@ -51,7 +51,13 @@ export function WineRegionPage() {
         <p className="text-sm text-destructive">Failed to load GeoJSON: {error}</p>
       )}
 
-      {geojson && <LeafletMap geojson={geojson} height="calc(100vh - 160px)" />}
+      {geojson && (
+        <LeafletMap
+          geojson={geojson}
+          height="calc(100vh - 160px)"
+          multiRegion={region.file.startsWith('All-Regions')}
+        />
+      )}
       </div>
     </div>
   );

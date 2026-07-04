@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point as turfPoint } from '@turf/helpers';
 import { LEFT_BANK } from '@/data/wineRegions';
+import { chateaux } from '@/data/chateaux';
 
 interface LeafletMapProps {
   geojson: object;
@@ -69,6 +70,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
   const mapRef = useRef<L.Map | null>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const regionLayersRef = useRef<Map<string, LayerEntry[]>>(new Map());
+  const [zoomLevel, setZoomLevel] = useState<number | null>(null);
 
   const regionNames = useMemo(() => {
     if (!multiRegion) return [];
@@ -148,6 +150,51 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
     } else {
       map.setView([44.8, -0.6], 9);
     }
+    map.once('moveend', () => setZoomLevel(map.getZoom()));
+
+    if (multiRegion) {
+      const metersPerPixel = (lat: number, zoom: number) =>
+        (40075016.686 * Math.cos((lat * Math.PI) / 180)) / (256 * Math.pow(2, zoom));
+
+      const MIN_ZOOM = 10;
+      const targetPx = (zoom: number) => Math.max(0.2, (zoom - 9) * 1.5);
+
+      const circleMarkers: Array<{ circle: L.Circle; ch: typeof chateaux[0] }> = [];
+
+      chateaux.forEach(ch => {
+        const zoom = map.getZoom();
+        const r = targetPx(zoom) * metersPerPixel(ch.lat, zoom);
+        const circle = L.circle([ch.lat, ch.lng] as L.LatLngTuple, {
+          radius: r,
+          color: 'rgba(139,0,0,0.9)',
+          weight: 1.5,
+          fillColor: 'rgba(139,0,0,0.8)',
+          fillOpacity: zoom >= MIN_ZOOM ? 1 : 0,
+          opacity: zoom >= MIN_ZOOM ? 1 : 0,
+        }).addTo(map);
+        const classLine = ch.classYear && ch.classification ? `${ch.classYear} ${ch.classification}` : ch.appellation;
+        circle.bindPopup(`<strong>${ch.name}</strong><br/><span style="font-size:0.75rem">${classLine}</span>`);
+        const tooltipHtml = `<div style="line-height:1.3">${ch.name}<br/><span style="opacity:0.7">${classLine}</span></div>`;
+        circle.bindTooltip(tooltipHtml, { permanent: true, className: 'chateau-tooltip', direction: 'top', offset: [0, -4] });
+        circle.openTooltip();
+        const tooltipEl = circle.getTooltip()?.getElement();
+        if (tooltipEl) tooltipEl.style.opacity = '0';
+        circleMarkers.push({ circle, ch });
+      });
+
+      map.on('zoomend', () => {
+        const zoom = map.getZoom();
+        setZoomLevel(zoom);
+        const visible = zoom >= MIN_ZOOM;
+        circleMarkers.forEach(({ circle, ch }) => {
+          circle.setStyle({ opacity: visible ? 1 : 0, fillOpacity: visible ? 1 : 0 });
+          if (visible) circle.setRadius(targetPx(zoom) * metersPerPixel(ch.lat, zoom));
+          const tooltipEl = circle.getTooltip()?.getElement();
+          if (tooltipEl) tooltipEl.style.opacity = zoom >= 15 ? '1' : '0';
+        });
+      });
+
+    }
 
     return () => {
       map.remove();
@@ -175,6 +222,11 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
       <div ref={containerRef} className="w-full h-full rounded-lg border border-border/50 z-0" />
       {multiRegion && (
         <>
+          {zoomLevel !== null && (
+            <div className="absolute top-2 right-2 z-[1000] pointer-events-none px-2 py-0.5 rounded text-xs font-mono font-semibold bg-background/90 border border-border shadow-sm">
+              z{zoomLevel}
+            </div>
+          )}
           <div
             ref={labelRef}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none px-3 py-1.5 rounded-md text-sm font-medium bg-background/90 border border-border shadow-sm transition-opacity duration-75"

@@ -10,6 +10,8 @@ geojson.io — simplest online editor; paste your GeoJSON, drag vertices to adju
 mapshaper.org — better for complex edits; supports snapping boundaries between adjacent polygons
 QGIS — free desktop app, most powerful but steeper learning curve
 
+https://claude.ai/code/artifact/51ee6ae8-5b51-4f59-b77d-deb7b56e0cbd?via=auto_preview
+
 ---
 
 ## Architecture

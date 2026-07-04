@@ -153,27 +153,32 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
     map.once('moveend', () => setZoomLevel(map.getZoom()));
 
     if (multiRegion) {
-      const metersPerPixel = (lat: number, zoom: number) =>
-        (40075016.686 * Math.cos((lat * Math.PI) / 180)) / (256 * Math.pow(2, zoom));
+      const MIN_ZOOM = 11;
+      const dotRadius = (zoom: number) => Math.min(3 + (zoom - MIN_ZOOM), 7);
+      const CRU_COLORS: Record<string, string> = {
+        '1er Cru':  '#0f3280',
+        '2ème Cru': '#5272c8',
+        '3ème Cru': '#8a7aaa',
+        '4ème Cru': '#c96060',
+        '5ème Cru': '#9e2020',
+      };
 
-      const MIN_ZOOM = 10;
-      const targetPx = (zoom: number) => Math.max(0.2, (zoom - 9) * 1.5);
-
-      const circleMarkers: Array<{ circle: L.Circle; ch: typeof chateaux[0] }> = [];
+      const circleMarkers: Array<{ circle: L.CircleMarker; ch: typeof chateaux[0] }> = [];
 
       chateaux.forEach(ch => {
         const zoom = map.getZoom();
-        const r = targetPx(zoom) * metersPerPixel(ch.lat, zoom);
-        const circle = L.circle([ch.lat, ch.lng] as L.LatLngTuple, {
-          radius: r,
-          color: 'rgba(139,0,0,0.9)',
+        const dotHex = ch.classification ? (CRU_COLORS[ch.classification] ?? '#8b0000') : '#8b0000';
+        const circle = L.circleMarker([ch.lat, ch.lng] as L.LatLngTuple, {
+          radius: dotRadius(zoom),
+          color: dotHex + 'e6',
           weight: 1.5,
-          fillColor: 'rgba(139,0,0,0.8)',
+          fillColor: dotHex + 'cc',
           fillOpacity: zoom >= MIN_ZOOM ? 1 : 0,
           opacity: zoom >= MIN_ZOOM ? 1 : 0,
         }).addTo(map);
         const classLine = ch.classYear && ch.classification ? `${ch.classYear} ${ch.classification}` : ch.appellation;
-        circle.bindPopup(`<strong>${ch.name}</strong><br/><span style="font-size:0.75rem">${classLine}</span>`);
+        const secondLine = ch.secondWine ? `<br/><span style="font-size:0.7rem;opacity:0.7">2nd: ${ch.secondWine}</span>` : '';
+        circle.bindPopup(`<strong>${ch.name}</strong><br/><span style="font-size:0.75rem">${classLine}</span>${secondLine}`);
         const tooltipHtml = `<div style="line-height:1.3">${ch.name}<br/><span style="opacity:0.7">${classLine}</span></div>`;
         circle.bindTooltip(tooltipHtml, { permanent: true, className: 'chateau-tooltip', direction: 'top', offset: [0, -4] });
         circle.openTooltip();
@@ -186,9 +191,9 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
         const zoom = map.getZoom();
         setZoomLevel(zoom);
         const visible = zoom >= MIN_ZOOM;
-        circleMarkers.forEach(({ circle, ch }) => {
+        circleMarkers.forEach(({ circle }) => {
           circle.setStyle({ opacity: visible ? 1 : 0, fillOpacity: visible ? 1 : 0 });
-          if (visible) circle.setRadius(targetPx(zoom) * metersPerPixel(ch.lat, zoom));
+          if (visible) circle.setRadius(dotRadius(zoom));
           const tooltipEl = circle.getTooltip()?.getElement();
           if (tooltipEl) tooltipEl.style.opacity = zoom >= 15 ? '1' : '0';
         });

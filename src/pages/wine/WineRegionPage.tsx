@@ -19,7 +19,7 @@ export function WineRegionPage() {
     if (!region) return;
     setGeojson(null);
     setError(null);
-    fetch(`/wine/${region.file}?v=2`)
+    fetch(`/wine/${region.file}?v=3`)
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(data => setGeojson(data))
       .catch(e => setError(e.message));

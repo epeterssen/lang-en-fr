@@ -22,9 +22,16 @@ function hueForRegion(name: string): number {
 }
 
 const STYLE_OVERRIDES: Partial<Record<string, L.PathOptions>> = {
-  'Pauillac':   { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 70%, 55%)', fillOpacity: 0.15 },
-  'Haut Medoc': { color: 'hsl(263, 90%, 20%)', weight: 3,   fillColor: 'hsl(263, 60%, 55%)', fillOpacity: 0.15 },
-  'Medoc':      { color: 'hsl(263, 90%, 20%)', weight: 3,   fillColor: 'hsl(263, 60%, 30%)', fillOpacity: 0.30 },
+  'Pauillac':   { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'St Julien':  { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'St Estephe': { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'Margaux':        { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'Pessac Leognan':      { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'St Emilion':          { color: 'hsl(250, 70%, 35%)', weight: 1.5, fillColor: 'hsl(250, 60%, 55%)', fillOpacity: 0.15 },
+  'St Emilion Grand Cru':{ color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'Pomerol':             { color: 'hsl(210, 80%, 30%)', weight: 1.5, fillColor: 'hsl(210, 80%, 15%)', fillOpacity: 0.15 },
+  'Haut Medoc': { color: 'hsl(263, 90%, 20%)', weight: 1.5, fillColor: 'hsl(263, 60%, 55%)', fillOpacity: 0.15 },
+  'Medoc':      { color: 'hsl(263, 90%, 20%)', weight: 1.5, fillColor: 'hsl(263, 60%, 30%)', fillOpacity: 0.30 },
 };
 
 function regionStyle(feature?: GeoJSON.Feature): L.PathOptions {
@@ -78,17 +85,19 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
     )].sort();
   }, [geojson, multiRegion]);
 
-  const [checked, setChecked] = useState<Set<string>>(() => new Set(regionNames));
+  const DEFAULT_CHECKED = new Set(['Pauillac', 'St Julien', 'St Estephe', 'Margaux', 'Pessac Leognan', 'St Emilion Grand Cru', 'Pomerol']);
+
+  const [checked, setChecked] = useState<Set<string>>(() => DEFAULT_CHECKED);
 
   useEffect(() => {
-    setChecked(new Set(regionNames));
+    setChecked(new Set(DEFAULT_CHECKED));
   }, [regionNames]);
 
   useEffect(() => {
     regionLayersRef.current.forEach((entries, name) => {
       const visible = checked.has(name);
       entries.forEach(({ layer, feature }) => {
-        layer.setStyle(visible ? regionStyle(feature) : { opacity: 0, fillOpacity: 0 });
+        layer.setStyle(visible ? { ...regionStyle(feature), opacity: 1 } : { opacity: 0, fillOpacity: 0 });
       });
     });
   }, [checked]);

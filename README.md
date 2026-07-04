@@ -6,6 +6,10 @@
 
 A React single-page app for learning French, deployed on AWS. The frontend is static (no server) and communicates with an AWS Lambda function for AI-powered Q&A. The Lambda holds the Anthropic API key server-side so it is never exposed to the browser.
 
+geojson.io — simplest online editor; paste your GeoJSON, drag vertices to adjust boundaries, copy back out
+mapshaper.org — better for complex edits; supports snapping boundaries between adjacent polygons
+QGIS — free desktop app, most powerful but steeper learning curve
+
 ---
 
 ## Architecture

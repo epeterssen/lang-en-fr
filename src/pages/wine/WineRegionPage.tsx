@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { CaretRightIcon } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +10,11 @@ import { wineRegions } from '@/data/wineRegions';
 export function WineRegionPage() {
   const { index } = useParams<{ index: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const region = wineRegions[Number(index)];
+  const focusLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined;
+  const focusLng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined;
+  const focusZoom = searchParams.get('zoom') ? parseInt(searchParams.get('zoom')!) : undefined;
 
   const [geojson, setGeojson] = useState<object | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +37,7 @@ export function WineRegionPage() {
     <div className="flex flex-col">
       <WineSubHeader>
         <Button variant="ghost" size="sm" className="-ml-2 text-muted-foreground" onClick={() => navigate('/wine')}>
-          Bordeaux Wine Regions
+          Bordeaux Wines
         </Button>
         <CaretRightIcon size={14} className="text-muted-foreground/50 shrink-0" />
         <span className="text-sm font-semibold">{region.name}</span>
@@ -53,7 +57,10 @@ export function WineRegionPage() {
         <LeafletMap
           geojson={geojson}
           height="calc(100dvh - 160px)"
-          multiRegion={region.file.startsWith('All-Regions')}
+          multiRegion={region.file.startsWith('Regions')}
+          focusLat={focusLat}
+          focusLng={focusLng}
+          focusZoom={focusZoom}
         />
       )}
       </div>

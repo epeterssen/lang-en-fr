@@ -9,7 +9,7 @@ import { chateaux, CRU_COLORS, CRU_ORDER } from '@/data/chateaux';
 const SECTION_LABEL: Record<string, string> = {
   left: 'Left Bank',
   right: 'Right Bank',
-  other: 'Other',
+  other: 'Maps',
 };
 
 const CRU_LABEL: Record<string, string> = {
@@ -35,6 +35,7 @@ export function WinePage() {
   const toggleBank = (bank: string, altKey: boolean) => {
     if (altKey) {
       const next = !banksOpen[bank];
+      setClassification1855Open(next);
       setBanksOpen({ left: next, right: next, other: next });
     } else {
       setBanksOpen(prev => ({ ...prev, [bank]: !prev[bank] }));
@@ -56,6 +57,8 @@ export function WinePage() {
     return { cru, label: CRU_LABEL[cru], color: CRU_COLORS[cru], entries, total: all.length };
   });
 
+  const appellationsMapIndex = wineRegions.findIndex(r => r.file.startsWith('Regions'));
+
   const sections = (['other', 'left', 'right'] as const).map(bank => ({
     bank,
     entries: wineRegions
@@ -67,14 +70,22 @@ export function WinePage() {
   return (
     <div className="flex flex-col">
       <WineSubHeader>
-        <h2 className="text-2xl font-semibold">Bordeaux Wines</h2>
+        <h2 className="text-2xl font-semibold">French Wine Regions</h2>
       </WineSubHeader>
-      <div className="px-4 py-6 border-b border-border">
-        <h2 className="text-lg font-semibold mb-4">Bordeaux Wine Classifications</h2>
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+      <div className="px-4 py-3 border-b border-border">
+        <h2 className="text-lg font-semibold">Bordeaux</h2>
+        <div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-4">
             <button
-              onClick={() => setClassification1855Open(o => !o)}
+              onClick={(e) => {
+                if (e.altKey) {
+                  const next = !classification1855Open;
+                  setClassification1855Open(next);
+                  setBanksOpen({ left: next, right: next, other: next });
+                } else {
+                  setClassification1855Open(o => !o);
+                }
+              }}
               className="flex items-center gap-1.5 group shrink-0"
             >
               <ChevronRight
@@ -110,7 +121,7 @@ export function WinePage() {
             )}
           </div>
           {classification1855Open && (
-            <div className="pl-4 border-l border-border space-y-2">
+            <div className="pl-4 border-l border-border space-y-2 mt-2">
               <div className="relative">
                 <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                 <input
@@ -133,7 +144,10 @@ export function WinePage() {
                       <div key={ch.name} className="flex items-center justify-between rounded-md border px-3 py-1" style={{ borderLeftWidth: 3, borderLeftColor: color }}>
                         <div className="flex items-center gap-1.5 min-w-0">
                           <div data-tooltip={ch.secondWine ?? 'No second wine'} className="card-tip min-w-0">
-                            <span className="text-sm font-medium truncate block">{ch.name}</span>
+                            <span
+                              className="text-sm font-medium truncate block cursor-pointer hover:underline"
+                              onClick={() => navigate(`/wine/region/${appellationsMapIndex}?lat=${ch.lat}&lng=${ch.lng}&zoom=16`)}
+                            >{ch.name}</span>
                           </div>
                           <button
                             onClick={() => {
@@ -166,15 +180,11 @@ export function WinePage() {
             </div>
           )}
         </div>
-      </div>
-      <div className="px-4 py-6">
-        <h2 className="text-lg font-semibold mb-4">Bordeaux Wine Regions</h2>
-        <div className="space-y-8">
         {sections.map(({ bank, entries }) => entries.length === 0 ? null : (
-          <div key={bank}>
+          <div key={bank} className="mt-4">
             <button
               onClick={(e) => toggleBank(bank, e.altKey)}
-              className="flex items-center gap-1.5 group mb-3"
+              className="flex items-center gap-1.5 group"
             >
               <ChevronRight
                 size={14}
@@ -186,31 +196,30 @@ export function WinePage() {
               </h3>
             </button>
             {banksOpen[bank] && (
-              <div className="pl-4 border-l border-border">
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {entries.map(({ region, i }) => (
-                  <div
-                    key={region.file}
-                    onClick={() => navigate(`/wine/region/${i}`)}
-                    className="flex items-center justify-between rounded-md border px-3 py-1 cursor-pointer transition-colors hover:[background-color:rgba(139,0,0,0.04)] border-l-[3px] border-l-[rgba(139,0,0,0.5)]"
-                  >
-                    <span className="text-sm font-medium">{region.name}</span>
-                    {region.designation && (
-                      <Badge
-                        variant="secondary"
-                        className="text-xs font-mono rounded-sm ml-3 shrink-0 ![background-color:rgba(139,0,0,0.10)]"
-                      >
-                        {region.designation}
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <div className="pl-4 border-l border-border mt-2">
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {entries.map(({ region, i }) => (
+                    <div
+                      key={region.file}
+                      onClick={() => navigate(`/wine/region/${i}`)}
+                      className="flex items-center justify-between rounded-md border px-3 py-1 cursor-pointer transition-colors hover:[background-color:rgba(139,0,0,0.04)] border-l-[3px] border-l-[rgba(139,0,0,0.5)]"
+                    >
+                      <span className="text-sm font-medium">{region.name}</span>
+                      {region.designation && (
+                        <Badge
+                          variant="secondary"
+                          className="text-xs font-mono rounded-sm ml-3 shrink-0 ![background-color:rgba(139,0,0,0.10)]"
+                        >
+                          {region.designation}
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         ))}
-        </div>
       </div>
     </div>
   );

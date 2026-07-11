@@ -10,6 +10,9 @@ interface LeafletMapProps {
   geojson: object;
   height?: number | string;
   multiRegion?: boolean;
+  focusLat?: number;
+  focusLng?: number;
+  focusZoom?: number;
 }
 
 const GOLDEN_ANGLE = 137.508;
@@ -65,7 +68,7 @@ function bboxArea(feature: GeoJSON.Feature): number {
 
 type LayerEntry = { layer: L.Path; feature: GeoJSON.Feature };
 
-export function LeafletMap({ geojson, height = 480, multiRegion = false }: LeafletMapProps) {
+export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLat, focusLng, focusZoom = 15 }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const labelRef = useRef<HTMLDivElement>(null);
@@ -144,11 +147,15 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
       map.on('mouseout', () => setLabel(''));
     }
 
-    const allBounds = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0]).getBounds();
-    if (allBounds.isValid()) {
-      map.fitBounds(allBounds, { padding: [32, 32] });
+    if (focusLat !== undefined && focusLng !== undefined) {
+      map.setView([focusLat, focusLng], focusZoom);
     } else {
-      map.setView([44.8, -0.6], 9);
+      const allBounds = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0]).getBounds();
+      if (allBounds.isValid()) {
+        map.fitBounds(allBounds, { padding: [32, 32] });
+      } else {
+        map.setView([44.8, -0.6], 9);
+      }
     }
     map.once('moveend', () => setZoomLevel(map.getZoom()));
 

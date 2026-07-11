@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +28,7 @@ const wineSearcherUrl = (name: string) =>
 
 export function WinePage() {
   const navigate = useNavigate();
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [classification1855Open, setClassification1855Open] = useState(true);
   const [search1855, setSearch1855] = useState('');
   const [banksOpen, setBanksOpen] = useState<Record<string, boolean>>({ left: true, right: true, other: true });
@@ -134,9 +135,23 @@ export function WinePage() {
                           <div data-tooltip={ch.secondWine ?? 'No second wine'} className="card-tip min-w-0">
                             <span className="text-sm font-medium truncate block">{ch.name}</span>
                           </div>
-                          <a href={wineSearcherUrl(ch.name)} target="_blank" rel="noreferrer" className="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
+                          <button
+                            onClick={() => {
+                              if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+                              searchTimerRef.current = setTimeout(() => {
+                                searchTimerRef.current = null;
+                                window.open(wineSearcherUrl(ch.name), '_blank', 'noreferrer');
+                              }, 220);
+                            }}
+                            onDoubleClick={() => {
+                              if (searchTimerRef.current) { clearTimeout(searchTimerRef.current); searchTimerRef.current = null; }
+                              window.open(wineSearcherUrl(ch.secondWine ?? ch.name), '_blank', 'noreferrer');
+                            }}
+                            data-tooltip="click: grand cru · dbl-click: second wine"
+                            className="card-tip shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                          >
                             <Search size={12} />
-                          </a>
+                          </button>
                         </div>
                         <div data-tooltip={ch.commune ?? ch.appellation} className="card-tip card-tip-red shrink-0 ml-2">
                           <Badge variant="secondary" className="text-xs font-mono rounded-sm ![background-color:rgba(0,0,0,0.06)]">

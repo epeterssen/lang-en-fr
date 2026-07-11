@@ -116,7 +116,7 @@ export function WinePage() {
                   type="text"
                   value={search1855}
                   onChange={e => setSearch1855(e.target.value)}
-                  placeholder="Search selected appellations…"
+                  placeholder="Search selected (checked) appellations…"
                   className="w-full rounded-md border border-input bg-background pl-7 pr-3 py-1 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                 />
               </div>

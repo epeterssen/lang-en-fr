@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point as turfPoint } from '@turf/helpers';
 import { LEFT_BANK } from '@/data/wineRegions';
-import { chateaux } from '@/data/chateaux';
+import { chateaux, CRU_COLORS } from '@/data/chateaux';
 
 interface LeafletMapProps {
   geojson: object;
@@ -155,13 +155,6 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
     if (multiRegion) {
       const MIN_ZOOM = 11;
       const dotRadius = (zoom: number) => Math.min(3 + (zoom - MIN_ZOOM), 7);
-      const CRU_COLORS: Record<string, string> = {
-        '1er Cru':  '#0f3280',
-        '2ème Cru': '#5272c8',
-        '3ème Cru': '#8a7aaa',
-        '4ème Cru': '#c96060',
-        '5ème Cru': '#9e2020',
-      };
 
       const circleMarkers: Array<{ circle: L.CircleMarker; ch: typeof chateaux[0] }> = [];
 
@@ -176,7 +169,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
           fillOpacity: zoom >= MIN_ZOOM ? 1 : 0,
           opacity: zoom >= MIN_ZOOM ? 1 : 0,
         }).addTo(map);
-        const classLine = ch.classYear && ch.classification ? `${ch.classYear} ${ch.classification}` : ch.appellation;
+        const classLine = ch.system && ch.classification ? `${ch.system} ${ch.classification}` : ch.appellation;
         const secondLine = ch.secondWine ? `<br/><span style="font-size:0.7rem;opacity:0.7">2nd: ${ch.secondWine}</span>` : '';
         circle.bindPopup(`<strong>${ch.name}</strong><br/><span style="font-size:0.75rem">${classLine}</span>${secondLine}`);
         const tooltipHtml = `<div style="line-height:1.3">${ch.name}<br/><span style="opacity:0.7">${classLine}</span></div>`;

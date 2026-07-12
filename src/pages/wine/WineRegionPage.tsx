@@ -56,7 +56,7 @@ export function WineRegionPage() {
       {geojson && (
         <LeafletMap
           geojson={geojson}
-          height="calc(100dvh - 160px)"
+          height="calc(100dvh - 212px)"
           multiRegion={region.file.startsWith('Regions')}
           focusLat={focusLat}
           focusLng={focusLng}

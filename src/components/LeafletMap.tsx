@@ -1,4 +1,5 @@
 import { useEffect, useRef, useMemo, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
@@ -106,7 +107,8 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
     if (!containerRef.current) return;
     regionLayersRef.current = new Map();
 
-    const map = L.map(containerRef.current);
+    const map = L.map(containerRef.current, { zoomControl: false });
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
     mapRef.current = map;
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -210,6 +212,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
     };
   }, [geojson, multiRegion]);
 
+  const [panelOpen, setPanelOpen] = useState(true);
   const allChecked = regionNames.every(n => checked.has(n));
 
   const toggleRegion = (name: string) => {
@@ -256,19 +259,29 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
             ));
             return (
               <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-32 sm:w-44 max-w-[40vw] flex flex-col overflow-hidden" style={{ maxHeight: '80dvh' }}>
-                <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none shrink-0">
-                  <input type="checkbox" checked={allChecked} onChange={toggleAll} className="accent-primary" />
-                  <span className="text-xs font-semibold text-foreground">All Regions</span>
-                </label>
-                <div className="overflow-y-auto flex-1 min-h-0">
-                  <div className="px-2.5 pt-1.5 pb-0.5">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Left Bank</span>
+                <div className={`flex items-center px-2.5 py-1.5 shrink-0 ${panelOpen ? 'border-b border-border' : ''}`}>
+                  <label className="flex items-center gap-2 cursor-pointer select-none flex-1 min-w-0">
+                    <input type="checkbox" checked={allChecked} onChange={toggleAll} className="accent-primary shrink-0" />
+                    <span className="text-xs font-semibold text-foreground truncate">All Regions</span>
+                  </label>
+                  <button
+                    onClick={() => setPanelOpen(o => !o)}
+                    className="shrink-0 ml-1 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ChevronRight size={13} className="transition-transform duration-200" style={{ transform: panelOpen ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+                  </button>
+                </div>
+                <div className="overflow-hidden transition-all duration-400" style={{ maxHeight: panelOpen ? '80dvh' : '0' }}>
+                  <div className="overflow-y-auto">
+                    <div className="px-2.5 pt-1.5 pb-0.5">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Left Bank</span>
+                    </div>
+                    {renderGroup(leftBank)}
+                    <div className="px-2.5 pt-2 pb-0.5 border-t border-border/50 mt-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Right Bank</span>
+                    </div>
+                    {renderGroup(rightBank)}
                   </div>
-                  {renderGroup(leftBank)}
-                  <div className="px-2.5 pt-2 pb-0.5 border-t border-border/50 mt-1">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Right Bank</span>
-                  </div>
-                  {renderGroup(rightBank)}
                 </div>
               </div>
             );

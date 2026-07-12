@@ -1,15 +1,19 @@
 import { useEffect, useRef, useMemo, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point as turfPoint } from '@turf/helpers';
 import { LEFT_BANK } from '@/data/wineRegions';
-import { chateaux } from '@/data/chateaux';
+import { chateaux, CRU_COLORS } from '@/data/chateaux';
 
 interface LeafletMapProps {
   geojson: object;
   height?: number | string;
   multiRegion?: boolean;
+  focusLat?: number;
+  focusLng?: number;
+  focusZoom?: number;
 }
 
 const GOLDEN_ANGLE = 137.508;
@@ -65,7 +69,7 @@ function bboxArea(feature: GeoJSON.Feature): number {
 
 type LayerEntry = { layer: L.Path; feature: GeoJSON.Feature };
 
-export function LeafletMap({ geojson, height = 480, multiRegion = false }: LeafletMapProps) {
+export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLat, focusLng, focusZoom = 15 }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const labelRef = useRef<HTMLDivElement>(null);
@@ -103,7 +107,8 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
     if (!containerRef.current) return;
     regionLayersRef.current = new Map();
 
-    const map = L.map(containerRef.current);
+    const map = L.map(containerRef.current, { zoomControl: false });
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
     mapRef.current = map;
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -144,30 +149,30 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
       map.on('mouseout', () => setLabel(''));
     }
 
-    const allBounds = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0]).getBounds();
-    if (allBounds.isValid()) {
-      map.fitBounds(allBounds, { padding: [32, 32] });
+    if (focusLat !== undefined && focusLng !== undefined) {
+      map.setView([focusLat, focusLng], focusZoom - 2);
+      map.once('moveend', () => setZoomLevel(map.getZoom()));
+      setTimeout(() => map.flyTo([focusLat, focusLng], focusZoom), 700);
     } else {
-      map.setView([44.8, -0.6], 9);
+      const allBounds = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0]).getBounds();
+      if (allBounds.isValid()) {
+        map.fitBounds(allBounds, { padding: [32, 32] });
+      } else {
+        map.setView([44.8, -0.6], 9);
+      }
+      map.once('moveend', () => setZoomLevel(map.getZoom()));
     }
-    map.once('moveend', () => setZoomLevel(map.getZoom()));
 
     if (multiRegion) {
       const MIN_ZOOM = 11;
       const dotRadius = (zoom: number) => Math.min(3 + (zoom - MIN_ZOOM), 7);
-      const CRU_COLORS: Record<string, string> = {
-        '1er Cru':  '#0f3280',
-        '2ème Cru': '#5272c8',
-        '3ème Cru': '#8a7aaa',
-        '4ème Cru': '#c96060',
-        '5ème Cru': '#9e2020',
-      };
 
       const circleMarkers: Array<{ circle: L.CircleMarker; ch: typeof chateaux[0] }> = [];
 
+      const zoom = map.getZoom();
       chateaux.forEach(ch => {
-        const zoom = map.getZoom();
-        const dotHex = ch.classification ? (CRU_COLORS[ch.classification] ?? '#8b0000') : '#8b0000';
+        if (ch.lat === undefined || ch.lng === undefined) return;
+        const dotHex = ch.system?.startsWith('withdrew') ? '#8b0000' : (ch.classification ? (CRU_COLORS[ch.classification] ?? '#8b0000') : '#8b0000');
         const circle = L.circleMarker([ch.lat, ch.lng] as L.LatLngTuple, {
           radius: dotRadius(zoom),
           color: dotHex + 'e6',
@@ -176,7 +181,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
           fillOpacity: zoom >= MIN_ZOOM ? 1 : 0,
           opacity: zoom >= MIN_ZOOM ? 1 : 0,
         }).addTo(map);
-        const classLine = ch.classYear && ch.classification ? `${ch.classYear} ${ch.classification}` : ch.appellation;
+        const classLine = ch.classification ?? ch.appellation;
         const secondLine = ch.secondWine ? `<br/><span style="font-size:0.7rem;opacity:0.7">2nd: ${ch.secondWine}</span>` : '';
         circle.bindPopup(`<strong>${ch.name}</strong><br/><span style="font-size:0.75rem">${classLine}</span>${secondLine}`);
         const tooltipHtml = `<div style="line-height:1.3">${ch.name}<br/><span style="opacity:0.7">${classLine}</span></div>`;
@@ -207,6 +212,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
     };
   }, [geojson, multiRegion]);
 
+  const [panelOpen, setPanelOpen] = useState(true);
   const allChecked = regionNames.every(n => checked.has(n));
 
   const toggleRegion = (name: string) => {
@@ -253,19 +259,29 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false }: Leafl
             ));
             return (
               <div className="absolute top-2 left-2 z-[1000] bg-background/90 border border-border rounded-md shadow-sm w-32 sm:w-44 max-w-[40vw] flex flex-col overflow-hidden" style={{ maxHeight: '80dvh' }}>
-                <label className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border cursor-pointer select-none shrink-0">
-                  <input type="checkbox" checked={allChecked} onChange={toggleAll} className="accent-primary" />
-                  <span className="text-xs font-semibold text-foreground">All Regions</span>
-                </label>
-                <div className="overflow-y-auto flex-1 min-h-0">
-                  <div className="px-2.5 pt-1.5 pb-0.5">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Left Bank</span>
+                <div className={`flex items-center px-2.5 py-1.5 shrink-0 ${panelOpen ? 'border-b border-border' : ''}`}>
+                  <label className="flex items-center gap-2 cursor-pointer select-none flex-1 min-w-0">
+                    <input type="checkbox" checked={allChecked} onChange={toggleAll} className="accent-primary shrink-0" />
+                    <span className="text-xs font-semibold text-foreground truncate">All Regions</span>
+                  </label>
+                  <button
+                    onClick={() => setPanelOpen(o => !o)}
+                    className="shrink-0 ml-1 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ChevronRight size={13} className="transition-transform duration-200" style={{ transform: panelOpen ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+                  </button>
+                </div>
+                <div className="overflow-hidden transition-all duration-400" style={{ maxHeight: panelOpen ? '80dvh' : '0' }}>
+                  <div className="overflow-y-auto">
+                    <div className="px-2.5 pt-1.5 pb-0.5">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Left Bank</span>
+                    </div>
+                    {renderGroup(leftBank)}
+                    <div className="px-2.5 pt-2 pb-0.5 border-t border-border/50 mt-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Right Bank</span>
+                    </div>
+                    {renderGroup(rightBank)}
                   </div>
-                  {renderGroup(leftBank)}
-                  <div className="px-2.5 pt-2 pb-0.5 border-t border-border/50 mt-1">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Right Bank</span>
-                  </div>
-                  {renderGroup(rightBank)}
                 </div>
               </div>
             );

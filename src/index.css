@@ -102,6 +102,35 @@
   z-index: 1000;
 }
 
+.card-tip {
+  position: relative;
+}
+.card-tip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 0.75rem;
+  transform: none;
+  background-color: rgba(0, 35, 149, 0.92);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+}
+.card-tip:hover::after {
+  opacity: 1;
+}
+
+.card-tip-red::after {
+  background-color: rgba(237, 41, 57, 0.92);
+}
+
 .chateau-tooltip {
   background: transparent !important;
   border: none !important;

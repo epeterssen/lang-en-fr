@@ -29,9 +29,9 @@ const wineSearcherUrl = (name: string) =>
 export function WinePage() {
   const navigate = useNavigate();
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [classification1855Open, setClassification1855Open] = useState(true);
+  const [classification1855Open, setClassification1855Open] = useState(false);
   const [search1855, setSearch1855] = useState('');
-  const [classificationSEOpen, setClassificationSEOpen] = useState(true);
+  const [classificationSEOpen, setClassificationSEOpen] = useState(false);
   const [searchSE, setSearchSE] = useState('');
   const [banksOpen, setBanksOpen] = useState<Record<string, boolean>>({ left: true, right: true, other: true });
   const toggleBank = (bank: string, altKey: boolean) => {
@@ -61,7 +61,7 @@ export function WinePage() {
   });
 
   const SE_SYSTEMS = new Set(['Saint-Émilion 2022', 'withdrew 2021', 'withdrew 2022']);
-  const SE_ORDER = ['Premier Grand Crus Classés A', 'Premier Grand Crus Classés B'] as const;
+  const SE_ORDER = ['Premier Grand Crus Classés A', 'Premier Grand Crus Classés B', 'Grand Crus Classés'] as const;
   const seGroups = SE_ORDER.map(cru => {
     const all = chateaux.filter(c => SE_SYSTEMS.has(c.system ?? '') && c.classification === cru);
     const q = searchSE.trim().toLowerCase();

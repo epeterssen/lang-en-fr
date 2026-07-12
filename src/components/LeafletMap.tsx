@@ -148,7 +148,9 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
     }
 
     if (focusLat !== undefined && focusLng !== undefined) {
-      map.setView([focusLat, focusLng], focusZoom);
+      map.setView([focusLat, focusLng], focusZoom - 2);
+      map.once('moveend', () => setZoomLevel(map.getZoom()));
+      setTimeout(() => map.flyTo([focusLat, focusLng], focusZoom), 700);
     } else {
       const allBounds = L.geoJSON(geojson as Parameters<typeof L.geoJSON>[0]).getBounds();
       if (allBounds.isValid()) {
@@ -156,8 +158,8 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
       } else {
         map.setView([44.8, -0.6], 9);
       }
+      map.once('moveend', () => setZoomLevel(map.getZoom()));
     }
-    map.once('moveend', () => setZoomLevel(map.getZoom()));
 
     if (multiRegion) {
       const MIN_ZOOM = 11;

@@ -4,14 +4,17 @@ export const CRU_COLORS: Record<string, string> = {
   '3ème Cru': '#8a7aaa',
   '4ème Cru': '#c96060',
   '5ème Cru': '#9e2020',
+  'Premier Grand Crus Classés A': '#6b0f0f',
+  'Premier Grand Crus Classés B': '#9b3030',
+  'Grand Crus Classés':           '#b56020',
 };
 
 export const CRU_ORDER = ['1er Cru', '2ème Cru', '3ème Cru', '4ème Cru', '5ème Cru'] as const;
 
 export interface Chateau {
   name: string;
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
   appellation: string;
   commune?: string;
   system?: string;
@@ -90,4 +93,96 @@ export const chateaux: Chateau[] = [
   { name: "Château Lynch-Moussas",                       lat: 45.1836, lng: -0.7922, appellation: 'Pauillac',       commune: 'Pauillac',                  system: '1855', classification: '5ème Cru', secondWine: 'Les Hauts de Lynch-Moussas' },
   { name: "Château Pédesclaux",                          lat: 45.2120, lng: -0.7567, appellation: 'Pauillac',       commune: 'Pauillac',                  system: '1855', classification: '5ème Cru', secondWine: 'Fleur de Pédesclaux' },
   { name: "Château Pontet-Canet",                        lat: 45.2083, lng: -0.7705, appellation: 'Pauillac',       commune: 'Pauillac',                  system: '1855', classification: '5ème Cru', secondWine: 'Les Hauts de Pontet-Canet' },
+
+  // ── Saint-Émilion 2022 ─────────────────────────────────────────────────────
+  // ── Premier Grand Crus Classés A ───────────────────────────────────────────
+  { name: "Château Figeac",                              lat: 44.9128, lng: -0.1924, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés A', secondWine: 'Petit-Figeac (formerly La Grange Neuve de Figeac)' },
+  { name: "Château Pavie",                               lat: 44.8843, lng: -0.1496, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés A', secondWine: 'Aromes de Pavie; Château Tour Simard' },
+
+  // ── Premier Grand Crus Classés B ───────────────────────────────────────────
+  { name: "Château Beau-Séjour Bécot",                  lat: 44.8949, lng: -0.1644, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Tournelle de Beau-Séjour Bécot; La Gomerie (garage wine); Mademoiselle La Gomerie' },
+  { name: "Château Beauséjour Duffau-Lagarrosse",        lat: 44.8923, lng: -0.1647, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Croix de Beauséjour' },
+  { name: "Château Bélair-Monange",                      lat: 44.8888, lng: -0.1617, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Annonce de Bélair-Monange' },
+  { name: "Château Canon",                               lat: 44.8929, lng: -0.1632, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Croix Canon' },
+  { name: "Château Canon la Gaffelière",                 lat: 44.8812, lng: -0.1609, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Côte Mignon La Gaffelière' },
+  { name: "Clos Fourtet",                                lat: 44.8946, lng: -0.1584, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B' },
+  { name: "La Mondotte",                                 lat: 44.8856, lng: -0.1384, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B' },
+  { name: "Château Larcis Ducasse",                      lat: 44.8815, lng: -0.1454, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Murmure de Larcis Ducasse' },
+  { name: "Château Pavie Macquin",                       lat: 44.8907, lng: -0.1491, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Les Chênes de Macquin' },
+  { name: "Château Trolong Mondot",                      lat: 44.8885, lng: -0.1408, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Mondot' },
+  { name: "Château Trottevieille",                       lat: 44.8948, lng: -0.1451, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Dame de Trottevieille' },
+  { name: "Château Valandraud",                          lat: 44.8939, lng: -0.1554, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Premier Grand Crus Classés B', secondWine: 'Virginie de Valandraud' },
+
+  // ── Grand Crus Classés ─────────────────────────────────────────────────────
+  { name: "Château Badette",                             lat: 44.9021, lng: -0.1378, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Badette Cuvée Prestige' },
+  { name: "Château Balestard la Tonnelle",               lat: 44.8984, lng: -0.1456, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Angelots de Balestard' },
+  { name: "Château Barde-Haut",                          lat: 44.8920, lng: -0.1326, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Terrasses de Barde-Haut' },
+  { name: "Château Bellefont Belcier",                   lat: 44.8806, lng: -0.1383, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Menuts de Bellefont Belcier' },
+  { name: "Château Bellevue",                            lat: 44.9311, lng: -0.1297, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Tours de Bellevue' },
+  { name: "Château Berliquet",                           lat: 44.8893, lng: -0.1647, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Ailes de Berliquet' },
+  { name: "Château Boutisse",                            lat: 44.8886, lng: -0.1056, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Cadrans de Boutisse' },
+  { name: "Château Cadet-Bon",                           lat: 44.9019, lng: -0.1533, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Cadets de Bon' },
+  { name: "Château Cap de Mourlin",                      lat: 44.9082, lng: -0.1547, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: "Cap d'Or de Mourlin" },
+  { name: "Château Chauvin",                             lat: 44.9173, lng: -0.1693, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Folie de Chauvin' },
+  { name: "Château Clos de Sarpe",                       lat: 44.8978, lng: -0.1355, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Charles de Sarpe' },
+  { name: "Château Corbin",                              lat: 44.9202, lng: -0.1700, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Divin de Corbin' },
+  { name: "Château Corbin Michotte",                     lat: 44.9240, lng: -0.1801, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Croix de Labrie",                     lat: 44.8944, lng: -0.1195, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Chapelle de Labrie' },
+  { name: "Château Côte de Baleau",                      lat: 44.9065, lng: -0.1644, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Hauts de Baleau' },
+  { name: "Château Dassault",                            lat: 44.9070, lng: -0.1425, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'D de Dassault' },
+  { name: "Château Destieux",                            lat: 44.8839, lng: -0.1119, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Faugères",                            lat: 44.8804, lng: -0.0869, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Haut Faugères' },
+  { name: "Château Fleur Cardinale",                     lat: 44.8900, lng: -0.0823, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Intuition de Fleur Cardinale' },
+  { name: "Château Fombrauge",                           lat: 44.8959, lng: -0.1141, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Magrez Fombrauge' },
+  { name: "Château Fonplégade",                          lat: 44.8854, lng: -0.1658, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Fleur de Fonplégade' },
+  { name: "Château Fonroque",                            lat: 44.9047, lng: -0.1602, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Château Cartier' },
+  { name: "Château Franc Mayne",                         lat: 44.8996, lng: -0.1715, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Cèdres de Franc Mayne' },
+  { name: "Château Grand Corbin",                        lat: 44.9203, lng: -0.1701, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Charmes de Grand Corbin' },
+  { name: "Château Grand Corbin-Despagne",               lat: 44.9231, lng: -0.1776, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Petit Corbin-Despagne' },
+  { name: "Château Grand Mayne",                         lat: 44.8998, lng: -0.1749, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Plantes de Grand Mayne' },
+  { name: "Château Guadet",                              lat: 44.8954, lng: -0.1553, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Haut-Sarpe",                          lat: 44.8972, lng: -0.1386, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Château Haut-Sarpe Cuvée Prestige' },
+  { name: "Château Jean Faure",                          lat: 44.9202, lng: -0.1827, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'La Réserve de Jean Faure' },
+  { name: "Château La Fleur Morange",                    lat: 44.8561, lng: -0.1105, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Mathilde de La Fleur Morange' },
+  { name: "Château Laniote",                             lat: 44.9049, lng: -0.1607, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Larmande",                            lat: 44.9064, lng: -0.1502, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Hauts de Larmande' },
+  { name: "Château Laroque",                             lat: 44.8907, lng: -0.1194, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Tours de Laroque' },
+  { name: "Château Laroze",                              appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Hauts de Laroze' },
+  { name: "Château Le Prieuré",                          appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Confidences du Prieuré' },
+  { name: "Château Mangot",                              appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Todeschini' },
+  { name: "Château Monbousquet",                         lat: 44.8711, lng: -0.1757, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Angelique de Monbousquet' },
+  { name: "Château Montlabert",                          lat: 44.9124, lng: -0.1812, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Douves de Montlabert' },
+  { name: "Château Montlisse",                           appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Moulin du Cadet",                     lat: 44.9043, lng: -0.1550, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Peby Faugères",                       appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Petit Faurie de Soutard",             lat: 44.9016, lng: -0.1444, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Ripeau",                              lat: 44.9177, lng: -0.1784, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Second de Ripeau' },
+  { name: "Château Rochebelle",                          lat: 44.8832, lng: -0.1356, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Rol Valentin",                        lat: 44.9118, lng: -0.1644, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Saint-Georges-Cote-Pavie",            lat: 44.8851, lng: -0.1543, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Sansonnet",                           appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Soutard",                             lat: 44.9015, lng: -0.1492, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Jardins de Soutard' },
+  { name: "Château Tour Baladoz",                        appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château Tour Saint-Christophe",               appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Terrasses de Saint-Christophe' },
+  { name: "Château Villemaurine",                        appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Angelots de Villemaurine' },
+  { name: "Château Yon-Figeac",                          appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Roches de Yon-Figeac' },
+  { name: "Château de Ferrand",                          appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Le Différent de Château de Ferrand' },
+  { name: "Château de Pressac",                          appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Tour de Pressac' },
+  { name: "Château la Commanderie",                      appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château la Confession",                       appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château la Couspaude",                        appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'La Couspaude Cuvée Tradition' },
+  { name: "Château la Croizille",                        appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château la Dominique",                        appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Relais de la Dominique' },
+  { name: "Château la Marzelle",                         appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Prieuré la Marzelle' },
+  { name: "Château la Serre",                            appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Château la Tour Figeac",                      lat: 44.9160, lng: -0.2015, appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: "L'Esquisse de la Tour Figeac" },
+  { name: "Château le Chatelet",                         appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Clos Badon Thunevin",                         appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Clos Dubreuil",                               appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Anna de Clos Dubreuil' },
+  { name: "Clos Saint-Julien",                           appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Siran",                                       appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés' },
+  { name: "Clos de l'Oratoire",                          appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: "Les Hauts de l'Oratoire" },
+  { name: "Clos des Jacobins",                           appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Cordeliers de Clos des Jacobins' },
+  { name: "Couvent des Jacobins",                        appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Confidences du Couvent' },
+  { name: "Lassegue",                                    appellation: 'Saint-Émilion', commune: 'Saint-Émilion', system: 'Saint-Émilion 2022', classification: 'Grand Crus Classés', secondWine: 'Les Cadrans de Lassègue' },
 ];

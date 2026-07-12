@@ -31,11 +31,14 @@ export function WinePage() {
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [classification1855Open, setClassification1855Open] = useState(true);
   const [search1855, setSearch1855] = useState('');
+  const [classificationSEOpen, setClassificationSEOpen] = useState(true);
+  const [searchSE, setSearchSE] = useState('');
   const [banksOpen, setBanksOpen] = useState<Record<string, boolean>>({ left: true, right: true, other: true });
   const toggleBank = (bank: string, altKey: boolean) => {
     if (altKey) {
       const next = !banksOpen[bank];
       setClassification1855Open(next);
+      setClassificationSEOpen(next);
       setBanksOpen({ left: next, right: next, other: next });
     } else {
       setBanksOpen(prev => ({ ...prev, [bank]: !prev[bank] }));
@@ -55,6 +58,14 @@ export function WinePage() {
     const q = search1855.trim().toLowerCase();
     const entries = all.filter(c => selectedAppellations.has(c.appellation) && (!q || c.name.toLowerCase().includes(q) || c.secondWine?.toLowerCase().includes(q)));
     return { cru, label: CRU_LABEL[cru], color: CRU_COLORS[cru], entries, total: all.length };
+  });
+
+  const SE_ORDER = ['Premier Grand Crus Classés A', 'Premier Grand Crus Classés B'] as const;
+  const seGroups = SE_ORDER.map(cru => {
+    const all = chateaux.filter(c => c.system === 'Saint-Émilion 2022' && c.classification === cru);
+    const q = searchSE.trim().toLowerCase();
+    const entries = all.filter(c => !q || c.name.toLowerCase().includes(q) || c.secondWine?.toLowerCase().includes(q));
+    return { cru, color: CRU_COLORS[cru], entries, total: all.length };
   });
 
   const appellationsMapIndex = wineRegions.findIndex(r => r.file.startsWith('Regions'));
@@ -81,6 +92,7 @@ export function WinePage() {
                 if (e.altKey) {
                   const next = !classification1855Open;
                   setClassification1855Open(next);
+                  setClassificationSEOpen(next);
                   setBanksOpen({ left: next, right: next, other: next });
                 } else {
                   setClassification1855Open(o => !o);
@@ -147,6 +159,91 @@ export function WinePage() {
                             <span
                               className="text-sm font-medium truncate block cursor-pointer hover:underline"
                               onClick={() => navigate(`/wine/region/${appellationsMapIndex}?lat=${ch.lat}&lng=${ch.lng}&zoom=16`)}
+                            >{ch.name}</span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+                              searchTimerRef.current = setTimeout(() => {
+                                searchTimerRef.current = null;
+                                window.open(wineSearcherUrl(ch.name), '_blank', 'noreferrer');
+                              }, 220);
+                            }}
+                            onDoubleClick={() => {
+                              if (searchTimerRef.current) { clearTimeout(searchTimerRef.current); searchTimerRef.current = null; }
+                              window.open(wineSearcherUrl(ch.secondWine ?? ch.name), '_blank', 'noreferrer');
+                            }}
+                            data-tooltip="click: grand cru · dbl-click: second wine"
+                            className="card-tip shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Search size={12} />
+                          </button>
+                        </div>
+                        <div data-tooltip={ch.commune ?? ch.appellation} className="card-tip card-tip-red shrink-0 ml-2">
+                          <Badge variant="secondary" className="text-xs font-mono rounded-sm ![background-color:rgba(0,0,0,0.06)]">
+                            {ch.appellation}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="mt-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            <button
+              onClick={(e) => {
+                if (e.altKey) {
+                  const next = !classificationSEOpen;
+                  setClassification1855Open(next);
+                  setClassificationSEOpen(next);
+                  setBanksOpen({ left: next, right: next, other: next });
+                } else {
+                  setClassificationSEOpen(o => !o);
+                }
+              }}
+              className="flex items-center gap-1.5 group shrink-0"
+            >
+              <ChevronRight
+                size={14}
+                className="text-muted-foreground transition-transform duration-200"
+                style={{ transform: classificationSEOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+              />
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
+                Saint-Émilion 2022
+              </h3>
+            </button>
+          </div>
+          {classificationSEOpen && (
+            <div className="pl-4 border-l border-border space-y-2 mt-2">
+              <div className="relative">
+                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchSE}
+                  onChange={e => setSearchSE(e.target.value)}
+                  placeholder="Search Saint-Émilion châteaux…"
+                  className="w-full rounded-md border border-input bg-background pl-7 pr-3 py-1 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                />
+              </div>
+              {seGroups.map(({ cru, color, entries, total }) => (
+                <div key={cru}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="inline-block w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                    <h3 className="text-sm font-semibold" style={{ color }}>{cru}</h3>
+                    <span className="text-xs text-muted-foreground">({entries.length}/{total})</span>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {entries.map(ch => (
+                      <div key={ch.name} className="flex items-center justify-between rounded-md border px-3 py-1" style={{ borderLeftWidth: 3, borderLeftColor: color }}>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <div data-tooltip={ch.secondWine ?? 'No second wine'} className="card-tip min-w-0">
+                            <span
+                              className={`text-sm font-medium truncate block ${ch.lat !== undefined ? 'cursor-pointer hover:underline' : ''}`}
+                              onClick={() => { if (ch.lat !== undefined && ch.lng !== undefined) navigate(`/wine/region/${appellationsMapIndex}?lat=${ch.lat}&lng=${ch.lng}&zoom=16`); }}
                             >{ch.name}</span>
                           </div>
                           <button

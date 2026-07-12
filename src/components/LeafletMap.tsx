@@ -165,8 +165,9 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
 
       const circleMarkers: Array<{ circle: L.CircleMarker; ch: typeof chateaux[0] }> = [];
 
+      const zoom = map.getZoom();
       chateaux.forEach(ch => {
-        const zoom = map.getZoom();
+        if (ch.lat === undefined || ch.lng === undefined) return;
         const dotHex = ch.classification ? (CRU_COLORS[ch.classification] ?? '#8b0000') : '#8b0000';
         const circle = L.circleMarker([ch.lat, ch.lng] as L.LatLngTuple, {
           radius: dotRadius(zoom),
@@ -176,7 +177,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
           fillOpacity: zoom >= MIN_ZOOM ? 1 : 0,
           opacity: zoom >= MIN_ZOOM ? 1 : 0,
         }).addTo(map);
-        const classLine = ch.system && ch.classification ? `${ch.system} ${ch.classification}` : ch.appellation;
+        const classLine = ch.classification ?? ch.appellation;
         const secondLine = ch.secondWine ? `<br/><span style="font-size:0.7rem;opacity:0.7">2nd: ${ch.secondWine}</span>` : '';
         circle.bindPopup(`<strong>${ch.name}</strong><br/><span style="font-size:0.75rem">${classLine}</span>${secondLine}`);
         const tooltipHtml = `<div style="line-height:1.3">${ch.name}<br/><span style="opacity:0.7">${classLine}</span></div>`;

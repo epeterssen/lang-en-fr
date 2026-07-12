@@ -60,9 +60,10 @@ export function WinePage() {
     return { cru, label: CRU_LABEL[cru], color: CRU_COLORS[cru], entries, total: all.length };
   });
 
+  const SE_SYSTEMS = new Set(['Saint-Émilion 2022', 'withdrew 2021', 'withdrew 2022']);
   const SE_ORDER = ['Premier Grand Crus Classés A', 'Premier Grand Crus Classés B'] as const;
   const seGroups = SE_ORDER.map(cru => {
-    const all = chateaux.filter(c => c.system === 'Saint-Émilion 2022' && c.classification === cru);
+    const all = chateaux.filter(c => SE_SYSTEMS.has(c.system ?? '') && c.classification === cru);
     const q = searchSE.trim().toLowerCase();
     const entries = all.filter(c => !q || c.name.toLowerCase().includes(q) || c.secondWine?.toLowerCase().includes(q));
     return { cru, color: CRU_COLORS[cru], entries, total: all.length };
@@ -264,11 +265,17 @@ export function WinePage() {
                             <Search size={12} />
                           </button>
                         </div>
-                        <div data-tooltip={ch.commune ?? ch.appellation} className="card-tip card-tip-red shrink-0 ml-2">
-                          <Badge variant="secondary" className="text-xs font-mono rounded-sm ![background-color:rgba(0,0,0,0.06)]">
-                            {ch.appellation}
+                        {ch.system?.startsWith('withdrew') ? (
+                          <Badge variant="secondary" className="text-xs font-mono rounded-sm shrink-0 ml-2 ![background-color:rgba(139,0,0,0.08)] ![color:rgba(139,0,0,0.7)]">
+                            {ch.system}
                           </Badge>
-                        </div>
+                        ) : (
+                          <div data-tooltip={ch.commune ?? ch.appellation} className="card-tip card-tip-red shrink-0 ml-2">
+                            <Badge variant="secondary" className="text-xs font-mono rounded-sm ![background-color:rgba(0,0,0,0.06)]">
+                              {ch.appellation}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

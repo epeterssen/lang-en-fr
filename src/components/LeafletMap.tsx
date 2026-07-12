@@ -168,7 +168,7 @@ export function LeafletMap({ geojson, height = 480, multiRegion = false, focusLa
       const zoom = map.getZoom();
       chateaux.forEach(ch => {
         if (ch.lat === undefined || ch.lng === undefined) return;
-        const dotHex = ch.classification ? (CRU_COLORS[ch.classification] ?? '#8b0000') : '#8b0000';
+        const dotHex = ch.system?.startsWith('withdrew') ? '#8b0000' : (ch.classification ? (CRU_COLORS[ch.classification] ?? '#8b0000') : '#8b0000');
         const circle = L.circleMarker([ch.lat, ch.lng] as L.LatLngTuple, {
           radius: dotRadius(zoom),
           color: dotHex + 'e6',

@@ -43,7 +43,7 @@ export function Home() {
             className="group cursor-pointer rounded-2xl flex flex-col items-center gap-4 p-8 w-56 transition-all duration-200 hover:scale-105 shadow-lg"
             style={{ background: 'rgba(255,255,255,0.12)', boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 8px 32px rgba(0,0,0,0.4)' }}
           >
-            <img src="/fleur-de-lis-transp.jpg.png" className="h-20 w-auto" />
+            <img src="/fleur-de-lis-transp.jpg.png" className="h-20 w-auto" style={{ opacity: 0.65 }} />
             <div className="text-center">
               <div className="font-semibold text-lg">Learn French</div>
               <div className="text-muted-foreground text-sm mt-1">Vocabulary, grammar &amp; conversation</div>

@@ -1,13 +1,42 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useSettingsStore } from '@/store/settings'
+
+const BG_STYLE = "url('/EiffelTowerClean.jpg') center calc(100% + 65px) / auto 88vh no-repeat";
+const FADE_SCROLL = 500;
 
 export function Home() {
   const navigate = useNavigate()
+  const showBackground = useSettingsStore(s => s.showBackground)
+  const [bgOpacity, setBgOpacity] = useState(1)
+
+  useEffect(() => {
+    setBgOpacity(1);
+    const onScroll = () => {
+      const progress = Math.min(window.scrollY / FADE_SCROLL, 1);
+      setBgOpacity(1 - progress);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className="flex flex-col">
+      {showBackground && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: BG_STYLE,
+            opacity: bgOpacity,
+            zIndex: -1,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
       <h2 className="text-2xl font-semibold px-4 pt-4">Home</h2>
-      <div className="flex-1 px-8 py-6 space-y-6">
+      <div className="flex-1 px-8 py-6 space-y-6 mt-[150vh]">
         <p className="text-lg leading-relaxed">
           Welcome to <strong>lang-en-fr</strong> — a modern, structured approach to learning French
           designed for English speakers who want results without the frustration.

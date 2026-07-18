@@ -9,7 +9,6 @@ export function Home() {
     return () => document.body.classList.add('bg-on');
   }, []);
 
-
   return (
     <div className="flex-1 relative flex flex-col items-center overflow-hidden pb-16">
       <svg style={{ position: 'fixed', width: 0, height: 0 }}>
@@ -24,11 +23,11 @@ export function Home() {
       </svg>
       <div style={{
         position: 'fixed', inset: 0,
-        backgroundImage: "url('/EiffelTowerClean.jpg')",
+        backgroundImage: "url('/EiffelTowerCleanTrans.png')",
         backgroundSize: 'auto 88vh',
         backgroundPosition: 'center calc(100% + 65px)',
         backgroundRepeat: 'no-repeat',
-        opacity: 0.1,
+        opacity: 0.2,
         filter: 'url(#flagWave) saturate(0.05) hue-rotate(200deg) brightness(2.5)',
         maskImage: 'radial-gradient(ellipse 40% 45% at center, black 10%, transparent 100%)',
         WebkitMaskImage: 'radial-gradient(ellipse 40% 45% at center, black 10%, transparent 100%)',
@@ -37,7 +36,7 @@ export function Home() {
       }} />
       {/* Content */}
       <div className="flex flex-col items-center gap-3 px-6" style={{ position: 'fixed', bottom: '7rem', left: 0, right: 0, zIndex: 1 }}>
-<div className="flex gap-6 flex-wrap justify-center">
+        <div className="flex gap-6 flex-wrap justify-center">
           {/* Language card */}
           <div
             onClick={() => navigate('/main-menu')}

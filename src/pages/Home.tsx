@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { useSettingsStore } from '@/store/settings'
 
 const BG_STYLE = "url('/EiffelTowerClean.jpg') center calc(100% + 65px) / auto 88vh no-repeat";
+const LEFT_IMG = '/fleur-de-lis-transp.jpg.png';
 const FADE_SCROLL = 500;
 
 export function Home() {
@@ -24,19 +25,50 @@ export function Home() {
   return (
     <div className="flex flex-col">
       {showBackground && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: BG_STYLE,
-            opacity: bgOpacity,
-            zIndex: -1,
-            pointerEvents: 'none',
-          }}
-        />
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: BG_STYLE,
+              opacity: bgOpacity,
+              zIndex: -1,
+              pointerEvents: 'none',
+            }}
+          />
+          <img
+            src={LEFT_IMG}
+            onClick={() => navigate('/main-menu')}
+            style={{
+              position: 'fixed',
+              left: '4%',
+              bottom: '40vh',
+              height: '31vh',
+              width: 'auto',
+              opacity: bgOpacity,
+              zIndex: 1,
+              cursor: 'pointer',
+            }}
+          />
+          <img
+            src="/mk-digital-products-AnRpUiSEv2o-unsplash.jpg"
+            onClick={() => navigate('/wine')}
+            style={{
+              position: 'fixed',
+              right: '2.5%',
+              bottom: '34vh',
+              height: '42vh',
+              width: 'auto',
+              opacity: bgOpacity,
+              zIndex: 1,
+              cursor: 'pointer',
+              mixBlendMode: 'multiply',
+            }}
+          />
+        </>
       )}
       <h2 className="text-2xl font-semibold px-4 pt-4">Home</h2>
-      <div className="flex-1 px-8 py-6 space-y-6 mt-[150vh]">
+      <div className="flex-1 px-8 py-6 space-y-6">
         <p className="text-lg leading-relaxed">
           Welcome to <strong>lang-en-fr</strong> — a modern, structured approach to learning French
           designed for English speakers who want results without the frustration.

@@ -13,7 +13,7 @@ export function AppHeader() {
           <Button variant="ghost" size="sm">AI Agent</Button>
           <Button variant="ghost" size="icon"><ListIcon size={22} /></Button>
         </div>
-        <h1 className="flex-1 min-w-0 text-center font-bold text-xl sm:text-3xl truncate text-[#333333]">Understanding French</h1>
+        <h1 className="flex-1 min-w-0 text-center font-bold text-xl sm:text-3xl text-[#333333]">Understanding French</h1>
         <div className="flex-none flex items-center gap-1">
           <AIAgentDrawer />
           <HamburgerMenu />

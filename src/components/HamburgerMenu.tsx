@@ -82,8 +82,18 @@ export function HamburgerMenu() {
           <div className="border-t border-border/50 pt-4 mt-2">
             <p className="text-xs text-muted-foreground px-1 mb-2 uppercase tracking-wide">Explore</p>
             <SheetClose asChild>
+              <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/')}>
+                Home
+              </Button>
+            </SheetClose>
+            <SheetClose asChild>
+              <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/main-menu')}>
+                French Language
+              </Button>
+            </SheetClose>
+            <SheetClose asChild>
               <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/wine')}>
-                Bordeaux Wine Regions
+                French Wine
               </Button>
             </SheetClose>
           </div>

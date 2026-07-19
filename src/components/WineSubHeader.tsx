@@ -11,8 +11,8 @@ export function WineSubHeader({ children }: WineSubHeaderProps) {
   return (
     <div className="sticky top-24 bg-background z-10 flex items-center justify-between px-4 pt-4 pb-2">
       <div className="flex items-center gap-1.5 flex-wrap min-w-0">{children}</div>
-      <Button variant="ghost" size="sm" className="shrink-0" onClick={() => navigate('/main-menu')}>
-        Main Menu
+      <Button variant="ghost" size="sm" className="shrink-0" onClick={() => navigate('/')}>
+        Home
       </Button>
     </div>
   );

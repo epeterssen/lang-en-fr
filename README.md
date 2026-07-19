@@ -3,6 +3,9 @@
 [Persistence](./documentation\persistence.md)
 [St. Emilion 2022](https://vins-saint-emilion.com/en/welcome-in-the-vineyard/the-2022-classification/)
 
+https://picsart.com/create/editor?category=miniapps&selectionMode=click&projectId=6a5bb18a5bc9a63f144fc26a
+https://picsart.com/create/editor?category=uploads&projectId=6a5bcdfbbd030896e655ae00
+
 ## Overview
 
 A React single-page app for learning French, deployed on AWS. The frontend is static (no server) and communicates with an AWS Lambda function for AI-powered Q&A. The Lambda holds the Anthropic API key server-side so it is never exposed to the browser.

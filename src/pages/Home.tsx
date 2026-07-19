@@ -1,6 +1,25 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+const RINGS = Array.from({ length: 30 }, () => {
+  const dur = 1.5 + Math.random() * 5;
+  return {
+    left: `${4 + Math.random() * 88}%`,
+    top: `${62 + Math.random() * 28}%`,
+    size: 24 + Math.random() * 38,
+    dur: `${dur}s`,
+    delay: `${-(Math.random() * dur)}s`,
+  };
+});
+
+const RAIN = Array.from({ length: 28 }, (_, i) => ({
+  left: `${((i * 100 / 28) + (i % 7) * 1.5) % 100}%`,
+  height: 8 + (i * 2) % 8,
+  dur: `${0.6 + (i % 6) * 0.1}s`,
+  delay: `${-((i * 7) % 15) / 10}s`,
+  opacity: 0.15 + (i % 4) * 0.04,
+}));
+
 export function Home() {
   const navigate = useNavigate()
 
@@ -34,6 +53,36 @@ export function Home() {
         pointerEvents: 'none',
         zIndex: 0,
       }} />
+      {/* Rain rings */}
+      {RINGS.map((r, i) => (
+        <div key={i} style={{
+          position: 'fixed',
+          left: r.left,
+          top: r.top,
+          width: r.size,
+          height: r.size * 0.35,
+          border: '1.5px solid rgba(80,120,160,1)',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+          zIndex: 0,
+          animation: `rainRing ${r.dur} ease-out ${r.delay} infinite`,
+        }} />
+      ))}
+      {/* Rain */}
+      {RAIN.map((r, i) => (
+        <div key={i} style={{
+          position: 'fixed', top: 0, left: r.left,
+          opacity: r.opacity, pointerEvents: 'none', zIndex: 0,
+          animation: `rainFall ${r.dur} linear ${r.delay} infinite`,
+        }}>
+          <div style={{
+            width: 1.5, height: r.height,
+            background: 'rgba(80,120,160,1)',
+            borderRadius: 1,
+            transform: 'rotate(12deg)',
+          }} />
+        </div>
+      ))}
       {/* Content */}
       <div className="flex flex-col items-center gap-3 px-6" style={{ position: 'fixed', bottom: '7rem', left: 0, right: 0, zIndex: 1 }}>
         <div className="flex gap-6 flex-wrap justify-center">

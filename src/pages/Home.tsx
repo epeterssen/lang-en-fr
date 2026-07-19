@@ -152,7 +152,7 @@ export function Home() {
           <div
             onClick={() => navigate('/main-menu')}
             className="group cursor-pointer rounded-2xl flex flex-col items-center gap-3 sm:gap-4 p-5 sm:p-8 flex-1 min-w-[8rem] max-w-[14rem] sm:flex-none sm:w-56 transition-all duration-200 hover:scale-105 shadow-lg"
-            style={{ background: 'rgba(255,255,255,0.12)', boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 8px 32px rgba(0,0,0,0.4)' }}
+            style={window.innerWidth < 768 ? {} : { background: 'rgba(255,255,255,0.12)', boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 8px 32px rgba(0,0,0,0.4)' }}
           >
             <img src="/fleur-de-lis-transp.jpg.png" className="w-auto h-auto max-h-[4rem] sm:max-h-none sm:h-[min(5rem,12dvh)]" style={{ opacity: 0.65 }} />
             <div className="text-center">
@@ -165,7 +165,7 @@ export function Home() {
           <div
             onClick={() => navigate('/wine')}
             className="group cursor-pointer rounded-2xl flex flex-col items-center gap-3 sm:gap-4 p-5 sm:p-8 flex-1 min-w-[8rem] max-w-[14rem] sm:flex-none sm:w-56 transition-all duration-200 hover:scale-105 shadow-lg"
-            style={{ background: 'rgba(255,255,255,0.12)', boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 8px 32px rgba(0,0,0,0.4)' }}
+            style={window.innerWidth < 768 ? {} : { background: 'rgba(255,255,255,0.12)', boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 8px 32px rgba(0,0,0,0.4)' }}
           >
             <img src="/mk-digital-products-AnRpUiSEv2o-transp-crop.png" className="w-auto h-auto max-h-[4rem] sm:max-h-none sm:h-[min(5rem,12dvh)]" />
             <div className="text-center">

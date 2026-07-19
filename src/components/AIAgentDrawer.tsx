@@ -157,10 +157,7 @@ export function AIAgentDrawer() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="ghost" size="sm" className="px-2 sm:px-3">
-          <span className="hidden sm:inline">AI Agent</span>
-          <span className="sm:hidden">✦</span>
-        </Button>
+        <Button variant="ghost" size="sm">AI Agent</Button>
       </DrawerTrigger>
       <DrawerContent className="h-[50vh] backdrop-blur-2xl border-t border-grey/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] [background:linear-gradient(to_bottom,rgba(180,190,210,0.08)_0%,rgba(140,155,180,0.04)_100%)]">
         <DrawerHeader className="pb-2">

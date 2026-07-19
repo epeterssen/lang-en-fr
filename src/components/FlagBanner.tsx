@@ -1,4 +1,4 @@
-const FLAG_H = 96
+const FLAG_H = 80
 
 export function FlagBanner() {
   return (

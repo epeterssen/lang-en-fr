@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Scratch images
+public/IMG*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

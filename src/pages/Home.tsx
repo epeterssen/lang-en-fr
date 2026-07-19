@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSettingsStore } from '@/store/settings'
 
 interface Ring {
   id: number;
@@ -22,13 +23,28 @@ let dropSeq = 0;
 
 export function Home() {
   const navigate = useNavigate()
+  const { animations, toggleAnimations } = useSettingsStore();
   const [rings, setRings] = useState<Ring[]>([]);
   const [drops, setDrops] = useState<Drop[]>([]);
   const spawnRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dropRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (window.innerWidth >= 640) return;
+    const t = setTimeout(() => {
+      if (useSettingsStore.getState().animations) toggleAnimations();
+    }, 20000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
     document.body.classList.remove('bg-on');
+
+    if (!animations) {
+      setRings([]);
+      setDrops([]);
+      return () => { document.body.classList.add('bg-on'); };
+    }
 
     const spawnRing = () => {
       const dur = 3.75 + Math.random() * 4;
@@ -51,7 +67,7 @@ export function Home() {
         id,
         left: `${Math.random() * 96}%`,
         height: 8 + Math.random() * 8,
-        opacity: 0.15 + Math.random() * 0.2,
+        opacity: 0.25 + Math.random() * 0.2,
         dur,
       }]);
       setTimeout(() => setDrops(prev => prev.filter(d => d.id !== id)), dur * 1000);
@@ -66,20 +82,22 @@ export function Home() {
       if (dropRef.current) clearTimeout(dropRef.current);
       document.body.classList.add('bg-on');
     };
-  }, []);
+  }, [animations]);
 
   return (
     <div className="flex-1 relative flex flex-col items-center overflow-hidden pb-16">
-      <svg style={{ position: 'fixed', width: 0, height: 0 }}>
-        <defs>
-          <filter id="flagWave">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="2" result="noise">
-              <animate attributeName="baseFrequency" values="0.012 0.04;0.018 0.06;0.012 0.04" dur="120s" repeatCount="indefinite" />
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
+      {animations && (
+        <svg style={{ position: 'fixed', width: 0, height: 0 }}>
+          <defs>
+            <filter id="flagWave">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="2" result="noise">
+                <animate attributeName="baseFrequency" values="0.012 0.04;0.018 0.06;0.012 0.04" dur="120s" repeatCount="indefinite" />
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+        </svg>
+      )}
       <div style={{
         position: 'fixed', inset: 0,
         backgroundImage: "url('/EiffelTowerCleanTrans.png')",
@@ -87,14 +105,19 @@ export function Home() {
         backgroundPosition: 'center calc(100% + 65px)',
         backgroundRepeat: 'no-repeat',
         opacity: 0.2,
-        filter: 'url(#flagWave) saturate(0.05) hue-rotate(200deg) brightness(2.5)',
-        maskImage: 'radial-gradient(ellipse 40% 45% at center, black 10%, transparent 100%)',
-        WebkitMaskImage: 'radial-gradient(ellipse 40% 45% at center, black 10%, transparent 100%)',
+        filter: animations
+          ? 'url(#flagWave) saturate(0.05) hue-rotate(200deg) brightness(2.5)'
+          : 'saturate(0.05) hue-rotate(200deg) brightness(2.5)',
+        maskImage: window.innerWidth < 768
+          ? 'radial-gradient(ellipse 80% 80% at center 65%, black 0%, transparent 92%)'
+          : 'radial-gradient(ellipse 40% 45% at center, black 10%, transparent 100%)',
+        WebkitMaskImage: window.innerWidth < 768
+          ? 'radial-gradient(ellipse 80% 80% at center 65%, black 0%, transparent 92%)'
+          : 'radial-gradient(ellipse 40% 45% at center, black 10%, transparent 100%)',
         pointerEvents: 'none',
         zIndex: 0,
       }} />
-      {/* Rain rings */}
-      {rings.map((r, i) => (
+      {animations && rings.map((r, i) => (
         <div key={i} style={{
           position: 'fixed',
           left: r.left,
@@ -108,8 +131,7 @@ export function Home() {
           animation: `rainRing ${r.dur}s linear 0s 1 forwards`,
         }} />
       ))}
-      {/* Rain */}
-      {drops.map((r) => (
+      {animations && drops.map((r) => (
         <div key={r.id} style={{
           position: 'fixed', top: 0, left: r.left,
           opacity: r.opacity, pointerEvents: 'none', zIndex: 0,

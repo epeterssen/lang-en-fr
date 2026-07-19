@@ -182,8 +182,8 @@
 
   @media (max-width: 767px) {
     body.bg-on::before {
-      mask-image: radial-gradient(ellipse 70% 50% at center 68%, black 0%, transparent 85%);
-      -webkit-mask-image: radial-gradient(ellipse 70% 50% at center 68%, black 0%, transparent 85%);
+      mask-image: radial-gradient(ellipse 80% 80% at center 65%, black 0%, transparent 92%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at center 65%, black 0%, transparent 92%);
     }
   }
   html {

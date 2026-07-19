@@ -17,7 +17,7 @@ const RAIN = Array.from({ length: 28 }, (_, i) => ({
   height: 8 + (i * 2) % 8,
   dur: `${0.6 + (i % 6) * 0.1}s`,
   delay: `${-((i * 7) % 15) / 10}s`,
-  opacity: 0.15 + (i % 4) * 0.04,
+  opacity: 0.15 + (i % 4) * 0.070,
 }));
 
 export function Home() {

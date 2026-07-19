@@ -180,6 +180,13 @@
     z-index: -1;
     pointer-events: none;
   }
+
+  @media (max-width: 767px) {
+    body.bg-on::before {
+      mask-image: radial-gradient(ellipse 70% 50% at center 68%, black 0%, transparent 85%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 50% at center 68%, black 0%, transparent 85%);
+    }
+  }
   html {
     @apply font-sans;
   }

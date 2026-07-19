@@ -7,6 +7,8 @@ interface SettingsState {
   toggleCopyPaste: () => void
   rolodex: boolean
   toggleRolodex: () => void
+  animations: boolean
+  toggleAnimations: () => void
   currentPageContext: string
   setCurrentPageContext: (ctx: string) => void
   currentPageTitle: string
@@ -20,6 +22,8 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   toggleCopyPaste: () => set((s) => ({ allowCopyPaste: !s.allowCopyPaste })),
   rolodex: false,
   toggleRolodex: () => set((s) => ({ rolodex: !s.rolodex })),
+  animations: true,
+  toggleAnimations: () => set((s) => ({ animations: !s.animations })),
   currentPageContext: '',
   setCurrentPageContext: (ctx) => set({ currentPageContext: ctx }),
   currentPageTitle: '',

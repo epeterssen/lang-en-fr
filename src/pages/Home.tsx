@@ -94,7 +94,7 @@ export function Home() {
           >
             <img src="/fleur-de-lis-transp.jpg.png" className="h-20 w-auto" style={{ opacity: 0.65 }} />
             <div className="text-center">
-              <div className="font-semibold text-lg">Learn French</div>
+              <div className="font-semibold text-lg">French Language</div>
               <div className="text-muted-foreground text-sm mt-1">Vocabulary, grammar &amp; conversation</div>
             </div>
           </div>
@@ -107,7 +107,7 @@ export function Home() {
           >
             <img src="/mk-digital-products-AnRpUiSEv2o-transp-crop.png" className="h-20 w-auto" />
             <div className="text-center">
-              <div className="font-semibold text-lg">Bordeaux Wines</div>
+              <div className="font-semibold text-lg">French Wine</div>
               <div className="text-muted-foreground text-sm mt-1">Classifications, regions &amp; châteaux</div>
             </div>
           </div>

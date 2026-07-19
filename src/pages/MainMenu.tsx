@@ -88,13 +88,18 @@ export function MainMenu() {
     <div className="flex flex-col">
       <div className="sticky top-24 bg-background z-10 flex items-center justify-between px-4 pt-4 pb-2">
         <h2 className="text-2xl font-semibold">Main Menu</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setOpenItems(allExpanded ? [] : allValues)}
-          >
-            {allExpanded ? 'Collapse All' : 'Expand All'}
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setOpenItems(allExpanded ? [] : allValues)}
+            >
+              {allExpanded ? 'Collapse All' : 'Expand All'}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
+              Home
+            </Button>
+          </div>
       </div>
       <div className="flex-1 px-4 py-3">
         <Accordion type="multiple" value={openItems} onValueChange={setOpenItems} className="w-full">
@@ -144,9 +149,6 @@ export function MainMenu() {
             </AccordionItem>
           ))}
         </Accordion>
-        <div className="mt-6">
-          <Button onClick={() => navigate('/')}>Home</Button>
-        </div>
       </div>
     </div>
   )
